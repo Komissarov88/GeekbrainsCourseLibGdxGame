@@ -9,7 +9,10 @@ public class IncrementMove {
     private final Vector2 move;
     private final float SPEED = 4;
 
-    public IncrementMove(Vector2 startPoint) {
+    public IncrementMove(Vector2 startPoint) throws NullPointerException {
+        if (startPoint == null) {
+            startPoint = new Vector2(0, 0);
+        }
         current = startPoint.cpy();
         destination = startPoint.cpy();
         move = new Vector2(0, 0);
