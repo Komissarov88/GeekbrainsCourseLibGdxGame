@@ -87,6 +87,7 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        ship.setDestination(screenX, Gdx.graphics.getHeight() - screenY);
         return false;
     }
 
