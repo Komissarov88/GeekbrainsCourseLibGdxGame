@@ -76,9 +76,7 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        int biasX = ship.getWidth() / 2;
-        int biasY = ship.getHeight() / 2;
-        ship.setDestination(screenX - biasX, -screenY + biasY);
+        ship.setDestination(screenX, Gdx.graphics.getHeight() - screenY);
         return false;
     }
 

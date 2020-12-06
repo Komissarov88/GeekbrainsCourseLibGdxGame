@@ -14,16 +14,13 @@ public class MovingSprite extends IncrementMove{
         sprite = new Texture(texturePath);
     }
 
+    @Override
+    public void setDestination(float x, float y) {
+        super.setDestination(x - sprite.getWidth()/2, y - sprite.getHeight()/2);
+    }
+
     public Texture getTexture() {
         return sprite;
-    }
-
-    public int getWidth() {
-        return sprite.getWidth();
-    }
-
-    public int getHeight() {
-        return sprite.getHeight();
     }
 
     public void dispose() {
