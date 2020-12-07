@@ -10,7 +10,7 @@ public class IncrementMove {
     private final float SPEED = 4;
     private final float MAX_LEN = 0.5f;
 
-    public IncrementMove(Vector2 startPoint) throws NullPointerException {
+    public IncrementMove(Vector2 startPoint) {
         if (startPoint == null) {
             startPoint = new Vector2(0, 0);
         }
