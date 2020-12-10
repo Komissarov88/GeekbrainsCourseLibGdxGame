@@ -1,21 +1,18 @@
-package geekbrainscourse.libgdxgame.logic;
+package geekbrainscourse.libgdxgame.math;
 
 import com.badlogic.gdx.math.Vector2;
 
 public class IncrementMove {
 
-    private final Vector2 current;
+    protected final Vector2 current;
     private final Vector2 destination;
     private final Vector2 move;
     private final float SPEED = 4;
-    private final float MAX_LEN = 0.5f;
+    private final float MAX_LEN = 0.0005f;
 
-    public IncrementMove(Vector2 startPoint) {
-        if (startPoint == null) {
-            startPoint = new Vector2(0, 0);
-        }
-        current = startPoint.cpy();
-        destination = startPoint.cpy();
+    public IncrementMove(float x, float y) {
+        current = new Vector2(x, y);
+        destination = new Vector2(x, y);
         move = new Vector2(0, 0);
     }
 
@@ -23,7 +20,7 @@ public class IncrementMove {
         destination.set(x, y);
     }
 
-    public Vector2 getNextPosition(float delta) {
+    public Vector2 updatePosition(float delta) {
         if (current.equals(destination)) {
             return current;
         }
