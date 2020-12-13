@@ -46,3 +46,10 @@ spSpaceship
   orig: 512, 512
   offset: 0, 0
   index: -1
+star
+  rotate: false
+  xy: 1252, 1618
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1

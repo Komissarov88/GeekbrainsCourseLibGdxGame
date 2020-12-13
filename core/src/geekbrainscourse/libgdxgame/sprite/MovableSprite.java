@@ -25,4 +25,8 @@ public class MovableSprite extends Sprite {
     public void setDestination(float x, float y) {
         move.setDestination(x, y);
     }
+
+    public void addDestination(float x, float y) {
+        move.addDestination(x, y);
+    }
 }
