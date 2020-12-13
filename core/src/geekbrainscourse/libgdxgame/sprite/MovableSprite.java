@@ -12,8 +12,8 @@ public class MovableSprite extends Sprite {
 
     private IncrementMove move;
 
-    public MovableSprite(float x, float y, String texturePath) {
-        super(texturePath);
+    public MovableSprite(float x, float y, TextureRegion region) {
+        super(region);
         move = new IncrementMove(x, y);
     }
 

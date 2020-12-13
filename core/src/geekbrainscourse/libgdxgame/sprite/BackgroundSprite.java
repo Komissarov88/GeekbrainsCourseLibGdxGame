@@ -10,8 +10,8 @@ import geekbrainscourse.libgdxgame.math.Rect;
 public class BackgroundSprite extends Sprite{
 
 
-    public BackgroundSprite(String texturePath) {
-        super(texturePath);
+    public BackgroundSprite(TextureRegion region) {
+        super(region);
     }
 
     @Override
