@@ -19,6 +19,11 @@ public class ButtonPlay extends BaseButton {
         this.game = game;
     }
 
+    public ButtonPlay(TextureRegion region, int frames, Game game) {
+        super(region, frames);
+        this.game = game;
+    }
+
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);

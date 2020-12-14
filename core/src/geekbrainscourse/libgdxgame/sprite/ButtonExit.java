@@ -15,6 +15,10 @@ public class ButtonExit extends BaseButton {
         super(region);
     }
 
+    public ButtonExit(TextureRegion region, int frames) {
+        super(region, frames);
+    }
+
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);

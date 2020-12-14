@@ -1,16 +1,14 @@
 package geekbrainscourse.libgdxgame.sprite;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import geekbrainscourse.libgdxgame.base.Sprite;
 import geekbrainscourse.libgdxgame.math.IncrementMove;
-import geekbrainscourse.libgdxgame.math.Rect;
 
 public class MovableSprite extends Sprite {
 
-    private IncrementMove move;
+    private final IncrementMove move;
 
     public MovableSprite(float x, float y, TextureRegion region) {
         super(region);

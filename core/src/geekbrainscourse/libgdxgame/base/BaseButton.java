@@ -5,13 +5,15 @@ import com.badlogic.gdx.math.Vector2;
 
 public abstract class BaseButton extends Sprite {
 
-    private static final float SCALE = 0.9f;
-
     private int pointer;
     private boolean pressed;
 
     public BaseButton(TextureRegion region) {
         super(region);
+    }
+
+    public BaseButton(TextureRegion region, int frames) {
+        super(region, frames);
     }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {
@@ -20,7 +22,7 @@ public abstract class BaseButton extends Sprite {
         }
         this.pointer = pointer;
         pressed = true;
-        setScale(SCALE);
+        nextFrame();
         return false;
     }
 
@@ -29,7 +31,7 @@ public abstract class BaseButton extends Sprite {
             return false;
         }
         pressed = false;
-        setScale(1f);
+        nextFrame();
         if (isMe(touch)) {
             action();
             return false;
