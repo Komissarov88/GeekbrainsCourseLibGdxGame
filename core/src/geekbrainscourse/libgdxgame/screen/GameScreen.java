@@ -37,7 +37,6 @@ public class GameScreen extends BaseScreen {
         super.render(delta);
         Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        keyboardUpdate(delta);
         batch.begin();
         background.draw(batch);
         for (Star star : stars) {
@@ -55,21 +54,6 @@ public class GameScreen extends BaseScreen {
         ship.resize(worldBounds);
         for (Star star : stars) {
             star.resize(worldBounds);
-        }
-    }
-
-    public void keyboardUpdate(float delta) {
-        final float SPEED = 0.5f;
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            ship.addDestination(-SPEED*delta, 0);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            ship.addDestination(SPEED*delta, 0);
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            ship.addDestination(0, SPEED*delta);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            ship.addDestination(0, -SPEED*delta);
         }
     }
 
