@@ -22,7 +22,8 @@ public class Bullet extends MovableSprite {
     public void set(
             Sprite owner,
             TextureRegion region,
-            Vector2 pos0,
+            float posX,
+            float posY,
             Vector2 v0,
             float height,
             Rect worldBounds,
@@ -30,7 +31,7 @@ public class Bullet extends MovableSprite {
     ) {
         this.owner = owner;
         this.regions[0] = region;
-        this.pos.set(pos0);
+        this.pos.set(posX, posY);
         this.direction.set(v0);
         setHeightProportion(height);
         this.worldBounds = worldBounds;

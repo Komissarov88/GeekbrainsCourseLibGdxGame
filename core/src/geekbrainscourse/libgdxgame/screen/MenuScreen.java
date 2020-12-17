@@ -26,14 +26,11 @@ public class MenuScreen extends BaseScreen {
     @Override
     public void show() {
         super.show();
-        atlas = new TextureAtlas("menu.atlas");
+        atlas = new TextureAtlas("main.atlas");
         background = new BackgroundSprite(atlas.findRegion("bgJuno"));
 
-        exitButton = new ButtonExit(atlas.findRegion("btQuit"), 2);
-        exitButton.setFrameRegion(atlas.findRegion("btQuitPressed"), 1);
-
-        playButton = new ButtonPlay(atlas.findRegion("btPlay"), 2, game);
-        playButton.setFrameRegion(atlas.findRegion("btPlayPressed"), 1);
+        exitButton = new ButtonExit(atlas.findRegion("btQuit"), 1, 2, 2);
+        playButton = new ButtonPlay(atlas.findRegion("btPlay"), 1, 2, 2, game);
     }
 
     @Override

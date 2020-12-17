@@ -23,10 +23,10 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void show() {
-        atlas = new TextureAtlas("menu.atlas");
+        atlas = new TextureAtlas("main.atlas");
         background = new BackgroundSprite(atlas.findRegion("bgJuno"));
-        ship = new PlayerShip(0, 0, atlas.findRegion("spSpaceship"));
         bulletPool = new BulletPool();
+        ship = new PlayerShip(0, 0, atlas, bulletPool);
 
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -85,6 +85,12 @@ public class GameScreen extends BaseScreen {
         super.touchDragged(screenX, screenY, pointer);
         ship.setDestination(touch.x, touch.y);
         return false;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        ship.keyDown(keycode);
+        return super.keyDown(keycode);
     }
 
     @Override

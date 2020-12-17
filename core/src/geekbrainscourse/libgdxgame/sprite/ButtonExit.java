@@ -15,8 +15,8 @@ public class ButtonExit extends BaseButton {
         super(region);
     }
 
-    public ButtonExit(TextureRegion region, int frames) {
-        super(region, frames);
+    public ButtonExit(TextureRegion region, int rows, int cols, int frames) {
+        super(region, rows, cols, frames);
     }
 
     @Override

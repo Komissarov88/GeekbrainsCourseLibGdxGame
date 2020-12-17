@@ -19,8 +19,8 @@ public class ButtonPlay extends BaseButton {
         this.game = game;
     }
 
-    public ButtonPlay(TextureRegion region, int frames, Game game) {
-        super(region, frames);
+    public ButtonPlay(TextureRegion region, int rows, int cols, int frames, Game game) {
+        super(region, rows, cols, frames);
         this.game = game;
     }
 

@@ -2,10 +2,13 @@ package geekbrainscourse.libgdxgame.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 import geekbrainscourse.libgdxgame.base.MovableSprite;
 import geekbrainscourse.libgdxgame.math.Rect;
+import geekbrainscourse.libgdxgame.pool.BulletPool;
 
 public class PlayerShip extends MovableSprite {
 
@@ -13,8 +16,15 @@ public class PlayerShip extends MovableSprite {
     private final float HEIGHT = 0.15f;
     private final float SPEED = 0.5f;
 
-    public PlayerShip(float x, float y, TextureRegion region) {
-        super(x, y, region);
+    private final BulletPool bulletPool;
+    private TextureRegion bulletRegion;
+    private Vector2 bulletV;
+
+    public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool) {
+        super(x, y, atlas.findRegion("spSpaceship"));
+        this.bulletPool = bulletPool;
+        bulletRegion = atlas.findRegion("bullet");
+        bulletV = new Vector2(0, 0.5f);
     }
 
     @Override
@@ -62,10 +72,24 @@ public class PlayerShip extends MovableSprite {
         }
     }
 
+    public boolean keyDown(int keycode) {
+        switch (keycode) {
+            case Input.Keys.SPACE:
+                shoot();
+                break;
+        }
+        return false;
+    }
+
     @Override
     public void resize(Rect worldBounds) {
         this.worldBounds = worldBounds;
         setHeightProportion(HEIGHT);
         pos.set(worldBounds.pos);
+    }
+
+    private void shoot() {
+        Bullet bullet = bulletPool.obtain();
+        bullet.set(this, bulletRegion, pos.x, getTop(), bulletV, 0.01f, worldBounds, 1);
     }
 }

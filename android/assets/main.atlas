@@ -1,5 +1,5 @@
 
-menu.png
+main.png
 size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest
@@ -13,30 +13,23 @@ bgJuno
   index: -1
 btPlay
   rotate: false
-  xy: 1028, 1432
-  size: 222, 108
-  orig: 222, 108
-  offset: 0, 0
-  index: -1
-btPlayPressed
-  rotate: false
   xy: 2, 2
-  size: 222, 108
-  orig: 222, 108
+  size: 444, 108
+  orig: 444, 108
   offset: 0, 0
   index: -1
 btQuit
   rotate: false
   xy: 1028, 1542
-  size: 222, 108
-  orig: 222, 108
+  size: 444, 108
+  orig: 444, 108
   offset: 0, 0
   index: -1
-btQuitPressed
+bullet
   rotate: false
-  xy: 516, 516
-  size: 222, 108
-  orig: 222, 108
+  xy: 516, 592
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1
 spSpaceship
@@ -48,7 +41,7 @@ spSpaceship
   index: -1
 star
   rotate: false
-  xy: 1252, 1618
+  xy: 1028, 1508
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

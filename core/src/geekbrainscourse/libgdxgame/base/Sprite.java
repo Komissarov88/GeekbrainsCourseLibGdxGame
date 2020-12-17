@@ -24,13 +24,6 @@ public class Sprite extends Rect {
 
     public Sprite(TextureRegion region, int rows, int cols, int frames) {
         regions = Regions.split(region, rows, cols, frames);
-    }
-
-    public Sprite(TextureRegion region, int frames) {
-        regions = new TextureRegion[frames];
-        for (int i = 0; i < regions.length; i++) {
-            setFrameRegion(region, i);
-        }
         frame = 0;
     }
 
