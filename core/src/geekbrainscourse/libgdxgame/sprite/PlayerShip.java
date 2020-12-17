@@ -17,18 +17,24 @@ public class PlayerShip extends MovableSprite {
     private final float SPEED = 0.5f;
 
     private final BulletPool bulletPool;
-    private TextureRegion bulletRegion;
-    private Vector2 bulletV;
+    private final TextureRegion bulletRegion;
+    private final Vector2 bulletV;
+
+    private final float AUTO_FIRE_COOL_DOWN = 0.3f;
+    private float autoFireTimer;
+    private boolean autoFire = false;
 
     public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool) {
         super(x, y, atlas.findRegion("spSpaceship"));
         this.bulletPool = bulletPool;
         bulletRegion = atlas.findRegion("bullet");
         bulletV = new Vector2(0, 0.5f);
+        autoFireTimer = AUTO_FIRE_COOL_DOWN;
     }
 
     @Override
     public void update(float delta) {
+        autoFireTimer -= delta;
         checkStop(delta);
         keyboardControls(delta);
         super.update(delta);
@@ -70,13 +76,16 @@ public class PlayerShip extends MovableSprite {
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
             addDestination(0, -SPEED*delta);
         }
+
+        if (autoFireTimer <= 0 && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || autoFire)) {
+            shoot();
+            autoFireTimer = AUTO_FIRE_COOL_DOWN;
+        }
     }
 
     public boolean keyDown(int keycode) {
-        switch (keycode) {
-            case Input.Keys.SPACE:
-                shoot();
-                break;
+        if (keycode == Input.Keys.B) {
+            autoFire = !autoFire;
         }
         return false;
     }
