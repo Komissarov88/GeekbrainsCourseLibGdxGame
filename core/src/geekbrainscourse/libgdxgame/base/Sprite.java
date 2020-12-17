@@ -1,9 +1,7 @@
 package geekbrainscourse.libgdxgame.base;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
 
 import geekbrainscourse.libgdxgame.math.Rect;
 
@@ -12,19 +10,33 @@ public class Sprite extends Rect {
     private float angle;
     private float scale = 1;
     private final TextureRegion[] regions;
-    private final Texture texture;
     private int frame;
-
-    public Sprite(String texturePath) {
-        texture = new Texture(texturePath);
-        regions = new TextureRegion[1];
-        regions[0] = new TextureRegion(texture);
-    }
 
     public Sprite(TextureRegion region) {
         regions = new TextureRegion[1];
         regions[0] = region;
-        texture = region.getTexture();
+        frame = 0;
+    }
+
+    public Sprite(TextureRegion region, int frames) {
+        regions = new TextureRegion[frames];
+        for (int i = 0; i < regions.length; i++) {
+            setFrameRegion(region, i);
+        }
+        frame = 0;
+    }
+
+    public void setFrameRegion(TextureRegion region, int frame) {
+        if (frame >= 0 && frame < regions.length) {
+            regions[frame] = region;
+        }
+    }
+
+    public void nextFrame() {
+        frame++;
+        if (frame >= regions.length) {
+            frame = 0;
+        }
     }
 
     public void setHeightProportion(float height) {
@@ -66,12 +78,10 @@ public class Sprite extends Rect {
         this.scale = scale;
     }
 
+    public void update(float delta) {}
+
     public void resize(Rect bounds) {
         setHeightProportion(bounds.getHeight());
         pos.set(bounds.pos);
-    }
-
-    public void dispose() {
-        texture.dispose();
     }
 }

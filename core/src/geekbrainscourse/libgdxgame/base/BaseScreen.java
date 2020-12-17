@@ -3,8 +3,6 @@ package geekbrainscourse.libgdxgame.base;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
@@ -16,18 +14,14 @@ import geekbrainscourse.libgdxgame.math.Rect;
 public class BaseScreen implements Screen, InputProcessor {
 
     protected SpriteBatch batch;
-
     private Rect screenBounds;
     protected Rect worldBounds;
     private Rect glBounds;
-
     private Matrix4 worldToGl;
     private Matrix3 screenToWorld;
-
     protected Vector2 touch;
 
-    @Override
-    public void show() {
+    public BaseScreen() {
         batch = new SpriteBatch();
         batch.getProjectionMatrix().idt();
         Gdx.input.setInputProcessor(this);
@@ -37,6 +31,10 @@ public class BaseScreen implements Screen, InputProcessor {
         worldToGl = new Matrix4();
         screenToWorld = new Matrix3();
         touch = new Vector2();
+    }
+
+    @Override
+    public void show() {
     }
 
     @Override
@@ -96,6 +94,7 @@ public class BaseScreen implements Screen, InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        touch.set(screenX, screenBounds.getHeight() - screenY).mul(screenToWorld);
         return false;
     }
 

@@ -1,0 +1,55 @@
+
+menu.png
+size: 2048,2048
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bgJuno
+  rotate: false
+  xy: 2, 626
+  size: 1024, 1024
+  orig: 1024, 1024
+  offset: 0, 0
+  index: -1
+btPlay
+  rotate: false
+  xy: 1028, 1432
+  size: 222, 108
+  orig: 222, 108
+  offset: 0, 0
+  index: -1
+btPlayPressed
+  rotate: false
+  xy: 2, 2
+  size: 222, 108
+  orig: 222, 108
+  offset: 0, 0
+  index: -1
+btQuit
+  rotate: false
+  xy: 1028, 1542
+  size: 222, 108
+  orig: 222, 108
+  offset: 0, 0
+  index: -1
+btQuitPressed
+  rotate: false
+  xy: 516, 516
+  size: 222, 108
+  orig: 222, 108
+  offset: 0, 0
+  index: -1
+spSpaceship
+  rotate: false
+  xy: 2, 112
+  size: 512, 512
+  orig: 512, 512
+  offset: 0, 0
+  index: -1
+star
+  rotate: false
+  xy: 1252, 1618
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1

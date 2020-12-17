@@ -20,6 +20,10 @@ public class IncrementMove {
         destination.set(x, y);
     }
 
+    public void addDestination(float x, float y) {
+        destination.add(x, y);
+    }
+
     public Vector2 updatePosition(float delta) {
         if (current.equals(destination)) {
             return current;
