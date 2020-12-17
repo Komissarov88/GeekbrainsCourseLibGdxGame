@@ -1,4 +1,4 @@
-package geekbrainscourse.libgdxgame.sprite;
+package geekbrainscourse.libgdxgame.base;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -17,10 +17,8 @@ public class MovableSprite extends Sprite {
         move = new IncrementMove(x, y);
     }
 
-    public void drawWithPositionUpdate(SpriteBatch batch, float delta) {
+    public void update(float delta) {
         pos.set(move.updatePosition(delta));
-        keyboardControls(delta);
-        super.draw(batch);
     }
 
     public void setDestination(float x, float y) {
@@ -31,18 +29,7 @@ public class MovableSprite extends Sprite {
         move.addDestination(x, y);
     }
 
-    public void keyboardControls(float delta) {
-        final float SPEED = 0.5f;
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            addDestination(-SPEED*delta, 0);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            addDestination(SPEED*delta, 0);
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            addDestination(0, SPEED*delta);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            addDestination(0, -SPEED*delta);
-        }
+    public void stop() {
+        move.stop();
     }
 }
