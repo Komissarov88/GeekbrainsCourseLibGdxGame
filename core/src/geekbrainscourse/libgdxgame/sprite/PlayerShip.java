@@ -45,10 +45,10 @@ public class PlayerShip extends MovableSprite {
     }
 
     public void checkStop(float delta) {
-        boolean isOutsideRight = getRight() + halfWidth/2> worldBounds.getRight();
-        boolean isOutsideLeft = getLeft() - halfWidth/2 < worldBounds.getLeft();
-        boolean isOutsideTop = getTop() + halfHeight/2 > worldBounds.getTop();
-        boolean isOutsideBottom = getBottom() - halfHeight/2 < worldBounds.getBottom();
+        boolean isOutsideRight = getRight() > worldBounds.getRight();
+        boolean isOutsideLeft = getLeft() < worldBounds.getLeft();
+        boolean isOutsideTop = getTop() > worldBounds.getTop();
+        boolean isOutsideBottom = getBottom() < worldBounds.getBottom();
 
         if (isOutsideLeft) {
             addDestination(SPEED*delta, 0);
