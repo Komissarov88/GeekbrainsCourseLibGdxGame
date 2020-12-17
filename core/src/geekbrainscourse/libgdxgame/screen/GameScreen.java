@@ -1,51 +1,74 @@
 package geekbrainscourse.libgdxgame.screen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import geekbrainscourse.libgdxgame.base.BaseScreen;
+import geekbrainscourse.libgdxgame.pool.BulletPool;
 import geekbrainscourse.libgdxgame.sprite.BackgroundSprite;
-import geekbrainscourse.libgdxgame.sprite.MovableSprite;
+import geekbrainscourse.libgdxgame.sprite.PlayerShip;
 import geekbrainscourse.libgdxgame.sprite.Star;
 
 public class GameScreen extends BaseScreen {
 
     private BackgroundSprite background;
-    private MovableSprite ship;
+    private PlayerShip ship;
     TextureAtlas atlas;
 
     private static final int STAR_COUNT = 128;
     private Star[] stars;
 
+    private BulletPool bulletPool;
+
+    private Music bgm;
+
     @Override
     public void show() {
-        atlas = new TextureAtlas("menu.atlas");
+        atlas = new TextureAtlas("main.atlas");
         background = new BackgroundSprite(atlas.findRegion("bgJuno"));
-        ship = new MovableSprite(0.3f, 0.3f, atlas.findRegion("spSpaceship"));
-        ship.setScale(0.3f);
+        bulletPool = new BulletPool();
+        ship = new PlayerShip(0, 0, atlas, bulletPool);
 
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
             stars[i] = new Star(atlas.findRegion("star"));
         }
+
+        bgm = Gdx.audio.newMusic(Gdx.files.internal("Jumpshot.mp3"));
+        bgm.setLooping(true);
+        bgm.setVolume(0.8f);
+        bgm.play();
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
+        updateObjects(delta);
+        freeDestroyedObjects();
         Gdx.gl.glClearColor(0.3f, 0.3f, 0.3f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        keyboardUpdate(delta);
         batch.begin();
         background.draw(batch);
         for (Star star : stars) {
-            star.update(delta);
             star.draw(batch);
         }
-        ship.drawWithPositionUpdate(batch, delta);
+        bulletPool.drawActiveObjects(batch);
+        ship.draw(batch);
         batch.end();
+    }
+
+    public void freeDestroyedObjects() {
+        bulletPool.freeAllDestroyedActiveObjects();
+    }
+
+    public void updateObjects(float delta) {
+        for (Star star : stars) {
+            star.update(delta);
+        }
+        bulletPool.updateActiveObjects(delta);
+        ship.update(delta);
     }
 
     @Override
@@ -55,21 +78,6 @@ public class GameScreen extends BaseScreen {
         ship.resize(worldBounds);
         for (Star star : stars) {
             star.resize(worldBounds);
-        }
-    }
-
-    public void keyboardUpdate(float delta) {
-        final float SPEED = 0.5f;
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            ship.addDestination(-SPEED*delta, 0);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            ship.addDestination(SPEED*delta, 0);
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            ship.addDestination(0, SPEED*delta);
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            ship.addDestination(0, -SPEED*delta);
         }
     }
 
@@ -88,8 +96,17 @@ public class GameScreen extends BaseScreen {
     }
 
     @Override
+    public boolean keyDown(int keycode) {
+        ship.keyDown(keycode);
+        return super.keyDown(keycode);
+    }
+
+    @Override
     public void dispose() {
         atlas.dispose();
+        bulletPool.dispose();
+        ship.dispose();
+        bgm.dispose();
         super.dispose();
     }
 }

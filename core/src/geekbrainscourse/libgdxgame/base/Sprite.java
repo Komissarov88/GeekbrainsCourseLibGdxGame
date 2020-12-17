@@ -4,13 +4,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import geekbrainscourse.libgdxgame.math.Rect;
+import geekbrainscourse.libgdxgame.utils.Regions;
 
 public class Sprite extends Rect {
 
     private float angle;
     private float scale = 1;
-    private final TextureRegion[] regions;
+    protected TextureRegion[] regions;
     private int frame;
+    private boolean destroyed;
+
+    protected Sprite(){}
 
     public Sprite(TextureRegion region) {
         regions = new TextureRegion[1];
@@ -18,11 +22,8 @@ public class Sprite extends Rect {
         frame = 0;
     }
 
-    public Sprite(TextureRegion region, int frames) {
-        regions = new TextureRegion[frames];
-        for (int i = 0; i < regions.length; i++) {
-            setFrameRegion(region, i);
-        }
+    public Sprite(TextureRegion region, int rows, int cols, int frames) {
+        regions = Regions.split(region, rows, cols, frames);
         frame = 0;
     }
 
@@ -83,5 +84,17 @@ public class Sprite extends Rect {
     public void resize(Rect bounds) {
         setHeightProportion(bounds.getHeight());
         pos.set(bounds.pos);
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
+    }
+
+    public void destroy() {
+        destroyed = true;
+    }
+
+    public void flushDestroy() {
+        destroyed = false;
     }
 }

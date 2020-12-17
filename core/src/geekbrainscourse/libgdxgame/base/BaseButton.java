@@ -12,8 +12,8 @@ public abstract class BaseButton extends Sprite {
         super(region);
     }
 
-    public BaseButton(TextureRegion region, int frames) {
-        super(region, frames);
+    public BaseButton(TextureRegion region, int rows, int cols, int frames) {
+        super(region, rows, cols, frames);
     }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {

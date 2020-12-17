@@ -24,6 +24,10 @@ public class IncrementMove {
         destination.add(x, y);
     }
 
+    public void stop() {
+        destination.set(current);
+    }
+
     public Vector2 updatePosition(float delta) {
         if (current.equals(destination)) {
             return current;
