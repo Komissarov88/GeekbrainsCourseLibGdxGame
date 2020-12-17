@@ -10,7 +10,9 @@ import geekbrainscourse.libgdxgame.math.IncrementMove;
 
 public class MovableSprite extends Sprite {
 
-    private final IncrementMove move;
+    private IncrementMove move;
+
+    protected MovableSprite(){}
 
     public MovableSprite(float x, float y, TextureRegion region) {
         super(region);

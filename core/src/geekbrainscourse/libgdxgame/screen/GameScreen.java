@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import geekbrainscourse.libgdxgame.base.BaseScreen;
+import geekbrainscourse.libgdxgame.pool.BulletPool;
 import geekbrainscourse.libgdxgame.sprite.BackgroundSprite;
 import geekbrainscourse.libgdxgame.sprite.PlayerShip;
 import geekbrainscourse.libgdxgame.sprite.Star;
@@ -18,11 +19,14 @@ public class GameScreen extends BaseScreen {
     private static final int STAR_COUNT = 128;
     private Star[] stars;
 
+    private BulletPool bulletPool;
+
     @Override
     public void show() {
         atlas = new TextureAtlas("menu.atlas");
         background = new BackgroundSprite(atlas.findRegion("bgJuno"));
-        ship = new PlayerShip(0.3f, 0.3f, atlas.findRegion("spSpaceship"));
+        ship = new PlayerShip(0, 0, atlas.findRegion("spSpaceship"));
+        bulletPool = new BulletPool();
 
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -42,18 +46,20 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.draw(batch);
         }
+        bulletPool.drawActiveObjects(batch);
         ship.draw(batch);
         batch.end();
     }
 
     public void freeDestroyedObjects() {
-
+        bulletPool.freeAllDestroyedActiveObjects();
     }
 
     public void updateObjects(float delta) {
         for (Star star : stars) {
             star.update(delta);
         }
+        bulletPool.updateActiveObjects(delta);
         ship.update(delta);
     }
 
@@ -84,6 +90,7 @@ public class GameScreen extends BaseScreen {
     @Override
     public void dispose() {
         atlas.dispose();
+        bulletPool.dispose();
         super.dispose();
     }
 }
