@@ -1,6 +1,7 @@
 package geekbrainscourse.libgdxgame.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
@@ -21,6 +22,8 @@ public class GameScreen extends BaseScreen {
 
     private BulletPool bulletPool;
 
+    private Music bgm;
+
     @Override
     public void show() {
         atlas = new TextureAtlas("main.atlas");
@@ -32,6 +35,11 @@ public class GameScreen extends BaseScreen {
         for (int i = 0; i < STAR_COUNT; i++) {
             stars[i] = new Star(atlas.findRegion("star"));
         }
+
+        bgm = Gdx.audio.newMusic(Gdx.files.internal("Jumpshot.mp3"));
+        bgm.setLooping(true);
+        bgm.setVolume(0.8f);
+        bgm.play();
     }
 
     @Override
@@ -97,6 +105,8 @@ public class GameScreen extends BaseScreen {
     public void dispose() {
         atlas.dispose();
         bulletPool.dispose();
+        ship.dispose();
+        bgm.dispose();
         super.dispose();
     }
 }

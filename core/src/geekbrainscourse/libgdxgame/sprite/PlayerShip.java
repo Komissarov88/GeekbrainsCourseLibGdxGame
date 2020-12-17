@@ -2,6 +2,7 @@ package geekbrainscourse.libgdxgame.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -24,12 +25,15 @@ public class PlayerShip extends MovableSprite {
     private float autoFireTimer;
     private boolean autoFire = false;
 
+    private Sound shot;
+
     public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool) {
         super(x, y, atlas.findRegion("spSpaceship"));
         this.bulletPool = bulletPool;
         bulletRegion = atlas.findRegion("bullet");
         bulletV = new Vector2(0, 0.5f);
         autoFireTimer = AUTO_FIRE_COOL_DOWN;
+        shot = Gdx.audio.newSound(Gdx.files.internal("sfx_weapon_singleshot13.wav"));
     }
 
     @Override
@@ -41,25 +45,21 @@ public class PlayerShip extends MovableSprite {
     }
 
     public void checkStop(float delta) {
-        boolean isOutsideRight = getRight() > worldBounds.getRight();
-        boolean isOutsideLeft = getLeft() < worldBounds.getLeft();
-        boolean isOutsideTop = getTop() > worldBounds.getTop();
-        boolean isOutsideBottom = getBottom() < worldBounds.getBottom();
+        boolean isOutsideRight = getRight() + halfWidth/2> worldBounds.getRight();
+        boolean isOutsideLeft = getLeft() - halfWidth/2 < worldBounds.getLeft();
+        boolean isOutsideTop = getTop() + halfHeight/2 > worldBounds.getTop();
+        boolean isOutsideBottom = getBottom() - halfHeight/2 < worldBounds.getBottom();
 
         if (isOutsideLeft) {
-            stop();
             addDestination(SPEED*delta, 0);
         }
         if (isOutsideRight) {
-            stop();
             addDestination(-SPEED*delta, 0);
         }
         if (isOutsideTop) {
-            stop();
             addDestination(0, -SPEED*delta);
         }
         if (isOutsideBottom) {
-            stop();
             addDestination(0, SPEED*delta);
         }
     }
@@ -100,5 +100,10 @@ public class PlayerShip extends MovableSprite {
     private void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos.x, getTop(), bulletV, 0.01f, worldBounds, 1);
+        shot.play();
+    }
+
+    public void dispose() {
+        shot.dispose();
     }
 }
