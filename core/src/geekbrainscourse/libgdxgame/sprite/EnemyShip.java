@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import geekbrainscourse.libgdxgame.base.Ship;
 import geekbrainscourse.libgdxgame.math.Rect;
+import geekbrainscourse.libgdxgame.math.Rnd;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
 
 public class EnemyShip extends Ship {
@@ -60,6 +61,11 @@ public class EnemyShip extends Ship {
     @Override
     public void update(float delta) {
         super.update(delta);
+        if (fireTimer.isCool() && autoFire) {
+            shoot();
+            fireTimer.reset(Rnd.nextFloat(autoFireCoolDown *2, autoFireCoolDown *5));
+        }
+        addDestination(0, speed *delta);
         if (getBottom() < worldBounds.getTop() - getHalfHeight()) {
             speed = v.y / 5;
             autoFire = true;

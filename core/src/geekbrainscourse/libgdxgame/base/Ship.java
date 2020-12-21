@@ -22,7 +22,7 @@ public abstract class Ship extends MovableSprite {
     protected int damage;
     protected int hp;
 
-    protected float damageCoolDown = 1.5f;
+    protected float damageCoolDown = 0.3f;
     protected CoolDownTimer damageTimer;
     protected float autoFireCoolDown = 0.3f;
     protected boolean autoFire = true;
@@ -50,6 +50,7 @@ public abstract class Ship extends MovableSprite {
 
     public void hit(int damage) {
         if (damageTimer.isCool()) {
+            setFrame(1);
             damageTimer.reset(damageCoolDown);
             hp -= damage;
             System.out.println(hp);
@@ -63,10 +64,10 @@ public abstract class Ship extends MovableSprite {
     public void update(float delta) {
         fireTimer.update(delta);
         damageTimer.update(delta);
-        addDestination(0, speed *delta);
-        if (fireTimer.isCool() && autoFire) {
-            shoot();
-            fireTimer.reset(Rnd.nextFloat(autoFireCoolDown *2, autoFireCoolDown *5));
+        if (damageTimer.isCool()) {
+            setFrame(0);
+        } else {
+            setFrame(1);
         }
         super.update(delta);
     }

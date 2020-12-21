@@ -92,10 +92,12 @@ public class GameScreen extends BaseScreen {
         for (Bullet b : bulletPool.getActiveObjects()) {
             if (!ship.isOutside(b) && b.getOwner() != ship) {
                 ship.hit(b.getDamage());
+                b.destroy();
             }
             for (Ship s : enemyPool.getActiveObjects()) {
                 if (!s.isOutside(b) && b.getOwner() == ship) {
                     s.hit(b.getDamage());
+                    b.destroy();
                 }
             }
         }

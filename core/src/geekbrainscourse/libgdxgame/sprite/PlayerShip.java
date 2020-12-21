@@ -17,15 +17,14 @@ public class PlayerShip extends Ship {
         bulletRegion = atlas.findRegion("bullet");
         bulletVelocity = new Vector2(0, 0.5f);
         autoFire = false;
+        damage = 100;
     }
 
     @Override
     public void update(float delta) {
-        fireTimer.update(delta);
-        damageTimer.update(delta);
+        super.update(delta);
         checkStop(delta);
         keyboardControls(delta);
-        pos.set(move.updatePosition(delta));
     }
 
     public void checkStop(float delta) {
