@@ -4,36 +4,19 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import geekbrainscourse.libgdxgame.base.MovableSprite;
-import geekbrainscourse.libgdxgame.math.Rect;
+import geekbrainscourse.libgdxgame.base.Ship;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
 
-public class PlayerShip extends MovableSprite {
+public class PlayerShip extends Ship {
 
-    private Rect worldBounds;
-    private final float HEIGHT = 0.15f;
-    private final float SPEED = 0.5f;
-
-    private final BulletPool bulletPool;
-    private final TextureRegion bulletRegion;
-    private final Vector2 bulletV;
-
-    private final float AUTO_FIRE_COOL_DOWN = 0.3f;
-    private float autoFireTimer;
-    private boolean autoFire = false;
-
-    private Sound shot;
-
-    public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool) {
-        super(x, y, atlas.findRegion("spSpaceship"));
-        this.bulletPool = bulletPool;
+    public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, Sound shot) {
+        super(x, y, atlas.findRegion("spSpaceship"), 1, 2, 2,
+                bulletPool, shot);
         bulletRegion = atlas.findRegion("bullet");
-        bulletV = new Vector2(0, 0.5f);
-        autoFireTimer = AUTO_FIRE_COOL_DOWN;
-        shot = Gdx.audio.newSound(Gdx.files.internal("sfx_weapon_singleshot13.wav"));
+        bulletVelocity = new Vector2(0, 0.5f);
+        autoFire = false;
     }
 
     @Override
@@ -41,7 +24,7 @@ public class PlayerShip extends MovableSprite {
         autoFireTimer -= delta;
         checkStop(delta);
         keyboardControls(delta);
-        super.update(delta);
+        pos.set(move.updatePosition(delta));
     }
 
     public void checkStop(float delta) {
@@ -51,35 +34,35 @@ public class PlayerShip extends MovableSprite {
         boolean isOutsideBottom = getBottom() < worldBounds.getBottom();
 
         if (isOutsideLeft) {
-            addDestination(SPEED*delta, 0);
+            addDestination(speed *delta, 0);
         }
         if (isOutsideRight) {
-            addDestination(-SPEED*delta, 0);
+            addDestination(-speed *delta, 0);
         }
         if (isOutsideTop) {
-            addDestination(0, -SPEED*delta);
+            addDestination(0, -speed *delta);
         }
         if (isOutsideBottom) {
-            addDestination(0, SPEED*delta);
+            addDestination(0, speed *delta);
         }
     }
 
     public void keyboardControls(float delta) {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            addDestination(-SPEED*delta, 0);
+            addDestination(-speed *delta, 0);
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            addDestination(SPEED*delta, 0);
+            addDestination(speed *delta, 0);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            addDestination(0, SPEED*delta);
+            addDestination(0, speed *delta);
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            addDestination(0, -SPEED*delta);
+            addDestination(0, -speed *delta);
         }
 
         if (autoFireTimer <= 0 && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || autoFire)) {
             shoot();
-            autoFireTimer = AUTO_FIRE_COOL_DOWN;
+            autoFireTimer = autoFireCoolDown;
         }
     }
 
@@ -88,22 +71,5 @@ public class PlayerShip extends MovableSprite {
             autoFire = !autoFire;
         }
         return false;
-    }
-
-    @Override
-    public void resize(Rect worldBounds) {
-        this.worldBounds = worldBounds;
-        setHeightProportion(HEIGHT);
-        pos.set(worldBounds.pos);
-    }
-
-    private void shoot() {
-        Bullet bullet = bulletPool.obtain();
-        bullet.set(this, bulletRegion, pos.x, getTop(), bulletV, 0.01f, worldBounds, 1);
-        shot.play();
-    }
-
-    public void dispose() {
-        shot.dispose();
     }
 }

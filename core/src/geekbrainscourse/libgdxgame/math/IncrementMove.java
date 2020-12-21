@@ -24,6 +24,10 @@ public class IncrementMove {
         destination.add(x, y);
     }
 
+    public void setCurrent(float x, float y) {
+        current.set(x, y);
+    }
+
     public void stop() {
         destination.set(current);
     }
@@ -36,6 +40,7 @@ public class IncrementMove {
         move.sub(current);
         if (move.len() > MAX_LEN) {
             move.scl(delta * SPEED);
+            move.clamp(0, 0.01f);
             current.add(move);
         } else {
             current.set(destination);
