@@ -52,6 +52,7 @@ public class EnemyShip extends Ship {
         this.hp = hp;
         this.autoFireCoolDown = reloadInterval;
         this.v = v;
+        speed = v.y;
         setHeightProportion(height);
     }
 
@@ -59,12 +60,12 @@ public class EnemyShip extends Ship {
     public void update(float delta) {
         super.update(delta);
         if (getBottom() < worldBounds.getTop() - getHalfHeight()) {
-            speed = 0.1f;
+            speed = v.y / 5;
             autoFire = true;
         }
         if (getBottom() < worldBounds.getBottom()) {
             autoFire = false;
-            speed = 0.5f;
+            speed = v.y;
         }
     }
 

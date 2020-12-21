@@ -44,7 +44,7 @@ public abstract class Ship extends MovableSprite {
     @Override
     public void update(float delta) {
         autoFireTimer -= delta;
-        addDestination(0, -speed *delta);
+        addDestination(0, speed *delta);
         if (autoFireTimer <= 0 && autoFire) {
             shoot();
             autoFireTimer = Rnd.nextFloat(autoFireCoolDown *2, autoFireCoolDown *5);

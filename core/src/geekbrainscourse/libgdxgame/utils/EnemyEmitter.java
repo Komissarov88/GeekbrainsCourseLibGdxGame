@@ -32,13 +32,13 @@ public class EnemyEmitter {
     private static final float ENEMY_BIG_RELOAD_INTERVAL = 0.5f;
     private static final int ENEMY_BIG_HP = 10;
 
-    private final Vector2 enemySmallV = new Vector2(0, -0.2f);
+    private final Vector2 enemySmallV = new Vector2(0, -0.5f);
     private final Vector2 enemySmallBulletV = new Vector2(0, -0.3f);
 
-    private final Vector2 enemyMiddleV = new Vector2(0, -0.03f);
+    private final Vector2 enemyMiddleV = new Vector2(0, -0.4f);
     private final Vector2 enemyMiddleBulletV = new Vector2(0, -0.3f);
 
-    private final Vector2 enemyBigV = new Vector2(0, -0.005f);
+    private final Vector2 enemyBigV = new Vector2(0, -0.3f);
     private final Vector2 enemyBigBulletV = new Vector2(0, -0.3f);
 
     private final Rect worldBounds;

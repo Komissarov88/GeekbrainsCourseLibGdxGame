@@ -61,9 +61,9 @@ public class GameScreen extends BaseScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         background.draw(batch);
-//        for (Star star : stars) {
-//            star.draw(batch);
-//        }
+        for (Star star : stars) {
+            star.draw(batch);
+        }
         bulletPool.drawActiveObjects(batch);
         enemyPool.drawActiveObjects(batch);
         ship.draw(batch);
@@ -76,9 +76,9 @@ public class GameScreen extends BaseScreen {
     }
 
     public void updateObjects(float delta) {
-//        for (Star star : stars) {
-//            star.update(delta);
-//        }
+        for (Star star : stars) {
+            star.update(delta);
+        }
         bulletPool.updateActiveObjects(delta);
         enemyPool.updateActiveObjects(delta);
         ship.update(delta);
