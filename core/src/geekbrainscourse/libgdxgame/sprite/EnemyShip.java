@@ -51,6 +51,7 @@ public class EnemyShip extends Ship {
         this.damage = damage;
         this.hp = hp;
         this.autoFireCoolDown = reloadInterval;
+        fireTimer.reset(reloadInterval);
         this.v = v;
         speed = v.y;
         setHeightProportion(height);

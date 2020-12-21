@@ -8,6 +8,7 @@ import geekbrainscourse.libgdxgame.math.Rect;
 import geekbrainscourse.libgdxgame.math.Rnd;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
 import geekbrainscourse.libgdxgame.sprite.Bullet;
+import geekbrainscourse.libgdxgame.utils.CoolDownTimer;
 
 public abstract class Ship extends MovableSprite {
 
@@ -22,17 +23,18 @@ public abstract class Ship extends MovableSprite {
     protected int hp;
 
     protected float damageCoolDown = 1.5f;
-    protected float damageTimer;
-    protected boolean isHitable = true;
+    protected CoolDownTimer damageTimer;
     protected float autoFireCoolDown = 0.3f;
-    protected float autoFireTimer;
     protected boolean autoFire = true;
+    protected CoolDownTimer fireTimer;
 
     protected float height = 0.15f;
     protected float speed = 0.5f;
 
     public Ship(BulletPool bulletPool) {
         this.bulletPool = bulletPool;
+        fireTimer = new CoolDownTimer(autoFireCoolDown);
+        damageTimer = new CoolDownTimer(damageCoolDown);
     }
 
     public Ship(float x, float y, TextureRegion region, int rows, int cols, int frames,
@@ -41,14 +43,14 @@ public abstract class Ship extends MovableSprite {
         this.bulletPool = bulletPool;
         bulletHeight = 0.01f;
         bulletSound = shot;
-        autoFireTimer = autoFireCoolDown;
-        damageTimer = damageCoolDown;
+        fireTimer = new CoolDownTimer(autoFireCoolDown);
+        damageTimer = new CoolDownTimer(damageCoolDown);
         hp = 100;
     }
 
     public void hit(int damage) {
-        if (isHitable) {
-            damageTimer = damageCoolDown;
+        if (damageTimer.isCool()) {
+            damageTimer.reset(damageCoolDown);
             hp -= damage;
             System.out.println(hp);
             if (hp <= 0) {
@@ -59,17 +61,12 @@ public abstract class Ship extends MovableSprite {
 
     @Override
     public void update(float delta) {
-        autoFireTimer -= delta;
-        damageTimer -= delta;
+        fireTimer.update(delta);
+        damageTimer.update(delta);
         addDestination(0, speed *delta);
-        if (autoFireTimer <= 0 && autoFire) {
+        if (fireTimer.isCool() && autoFire) {
             shoot();
-            autoFireTimer = Rnd.nextFloat(autoFireCoolDown *2, autoFireCoolDown *5);
-        }
-        if (damageTimer <= 0) {
-            isHitable = true;
-        } else {
-            isHitable = false;
+            fireTimer.reset(Rnd.nextFloat(autoFireCoolDown *2, autoFireCoolDown *5));
         }
         super.update(delta);
     }

@@ -95,7 +95,7 @@ public class GameScreen extends BaseScreen {
             }
             for (Ship s : enemyPool.getActiveObjects()) {
                 if (!s.isOutside(b) && b.getOwner() == ship) {
-                    System.out.println("enemy hit");
+                    s.hit(b.getDamage());
                 }
             }
         }

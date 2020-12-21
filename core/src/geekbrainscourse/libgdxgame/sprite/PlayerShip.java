@@ -21,7 +21,8 @@ public class PlayerShip extends Ship {
 
     @Override
     public void update(float delta) {
-        autoFireTimer -= delta;
+        fireTimer.update(delta);
+        damageTimer.update(delta);
         checkStop(delta);
         keyboardControls(delta);
         pos.set(move.updatePosition(delta));
@@ -60,9 +61,9 @@ public class PlayerShip extends Ship {
             addDestination(0, -speed *delta);
         }
 
-        if (autoFireTimer <= 0 && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || autoFire)) {
+        if (fireTimer.isCool() && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || autoFire)) {
             shoot();
-            autoFireTimer = autoFireCoolDown;
+            fireTimer.reset(autoFireCoolDown);
         }
     }
 
