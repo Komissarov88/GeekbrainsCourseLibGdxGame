@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import geekbrainscourse.libgdxgame.base.BaseScreen;
+import geekbrainscourse.libgdxgame.base.Ship;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
 import geekbrainscourse.libgdxgame.pool.EnemyPool;
 import geekbrainscourse.libgdxgame.sprite.BackgroundSprite;
+import geekbrainscourse.libgdxgame.sprite.Bullet;
 import geekbrainscourse.libgdxgame.sprite.EnemyShip;
 import geekbrainscourse.libgdxgame.sprite.PlayerShip;
 import geekbrainscourse.libgdxgame.sprite.Star;
@@ -82,7 +84,21 @@ public class GameScreen extends BaseScreen {
         bulletPool.updateActiveObjects(delta);
         enemyPool.updateActiveObjects(delta);
         ship.update(delta);
+        checkCollision();
         enemyEmitter.generate(delta);
+    }
+
+    public void checkCollision() {
+        for (Bullet b : bulletPool.getActiveObjects()) {
+            if (!ship.isOutside(b) && b.getOwner() != ship) {
+                ship.hit(b.getDamage());
+            }
+            for (Ship s : enemyPool.getActiveObjects()) {
+                if (!s.isOutside(b) && b.getOwner() == ship) {
+                    System.out.println("enemy hit");
+                }
+            }
+        }
     }
 
     @Override

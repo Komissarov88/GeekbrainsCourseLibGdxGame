@@ -21,6 +21,9 @@ public abstract class Ship extends MovableSprite {
     protected int damage;
     protected int hp;
 
+    protected float damageCoolDown = 1.5f;
+    protected float damageTimer;
+    protected boolean isHitable = true;
     protected float autoFireCoolDown = 0.3f;
     protected float autoFireTimer;
     protected boolean autoFire = true;
@@ -39,15 +42,34 @@ public abstract class Ship extends MovableSprite {
         bulletHeight = 0.01f;
         bulletSound = shot;
         autoFireTimer = autoFireCoolDown;
+        damageTimer = damageCoolDown;
+        hp = 100;
+    }
+
+    public void hit(int damage) {
+        if (isHitable) {
+            damageTimer = damageCoolDown;
+            hp -= damage;
+            System.out.println(hp);
+            if (hp <= 0) {
+                destroy();
+            }
+        }
     }
 
     @Override
     public void update(float delta) {
         autoFireTimer -= delta;
+        damageTimer -= delta;
         addDestination(0, speed *delta);
         if (autoFireTimer <= 0 && autoFire) {
             shoot();
             autoFireTimer = Rnd.nextFloat(autoFireCoolDown *2, autoFireCoolDown *5);
+        }
+        if (damageTimer <= 0) {
+            isHitable = true;
+        } else {
+            isHitable = false;
         }
         super.update(delta);
     }
