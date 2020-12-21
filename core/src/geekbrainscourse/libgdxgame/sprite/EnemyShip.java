@@ -18,7 +18,6 @@ public class EnemyShip extends Ship {
         super(bulletPool);
         this.worldBounds = worldBounds;
         autoFire = false;
-        speed = 0.5f;
         setAngle(180);
     }
 
@@ -28,7 +27,7 @@ public class EnemyShip extends Ship {
         bulletRegion = atlas.findRegion("bullet");
         bulletVelocity = new Vector2(0, -0.5f);
         autoFire = false;
-        speed = 0.5f;
+        v = new Vector2(0, 0.5f);
         setAngle(180);
     }
 
@@ -51,10 +50,8 @@ public class EnemyShip extends Ship {
         this.bulletVelocity = bulletV;
         this.damage = damage;
         this.hp = hp;
-        this.autoFireCoolDown = reloadInterval;
         fireTimer.reset(reloadInterval);
         this.v = v;
-        speed = v.y;
         setHeightProportion(height);
     }
 
@@ -65,15 +62,17 @@ public class EnemyShip extends Ship {
             shoot();
             fireTimer.reset(Rnd.nextFloat(autoFireCoolDown *2, autoFireCoolDown *5));
         }
-        addDestination(0, speed *delta);
         if (getBottom() < worldBounds.getTop() - getHalfHeight()) {
-            speed = v.y / 5;
+            addDestination(v.x*delta / 5, v.y*delta / 5);
             autoFire = true;
+            return;
         }
         if (getBottom() < worldBounds.getBottom()) {
             autoFire = false;
-            speed = v.y;
+            addDestination(v.x*delta, v.y*delta);
+            return;
         }
+        addDestination(v.x*delta, v.y*delta);
     }
 
     @Override

@@ -11,13 +11,15 @@ import geekbrainscourse.libgdxgame.pool.BulletPool;
 
 public class PlayerShip extends Ship {
 
+    private final float SPEED = 0.5f;
+
     public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, Sound shot) {
         super(x, y, atlas.findRegion("spSpaceship"), 1, 2, 2,
                 bulletPool, shot);
         bulletRegion = atlas.findRegion("bullet");
         bulletVelocity = new Vector2(0, 0.5f);
         autoFire = false;
-        damage = 100;
+        damage = 1;
     }
 
     @Override
@@ -34,30 +36,30 @@ public class PlayerShip extends Ship {
         boolean isOutsideBottom = getBottom() < worldBounds.getBottom();
 
         if (isOutsideLeft) {
-            addDestination(speed *delta, 0);
+            addDestination(SPEED *delta, 0);
         }
         if (isOutsideRight) {
-            addDestination(-speed *delta, 0);
+            addDestination(-SPEED *delta, 0);
         }
         if (isOutsideTop) {
-            addDestination(0, -speed *delta);
+            addDestination(0, -SPEED *delta);
         }
         if (isOutsideBottom) {
-            addDestination(0, speed *delta);
+            addDestination(0, SPEED *delta);
         }
     }
 
     public void keyboardControls(float delta) {
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            addDestination(-speed *delta, 0);
+            addDestination(-SPEED *delta, 0);
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            addDestination(speed *delta, 0);
+            addDestination(SPEED *delta, 0);
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            addDestination(0, speed *delta);
+            addDestination(0, SPEED *delta);
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            addDestination(0, -speed *delta);
+            addDestination(0, -SPEED *delta);
         }
 
         if (fireTimer.isCool() && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || autoFire)) {

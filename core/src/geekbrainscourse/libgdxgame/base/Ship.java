@@ -22,14 +22,13 @@ public abstract class Ship extends MovableSprite {
     protected int damage;
     protected int hp;
 
-    protected float damageCoolDown = 0.3f;
+    protected float damageCoolDown = 0.1f;
     protected CoolDownTimer damageTimer;
     protected float autoFireCoolDown = 0.3f;
     protected boolean autoFire = true;
     protected CoolDownTimer fireTimer;
 
     protected float height = 0.15f;
-    protected float speed = 0.5f;
 
     public Ship(BulletPool bulletPool) {
         this.bulletPool = bulletPool;
@@ -53,7 +52,6 @@ public abstract class Ship extends MovableSprite {
             setFrame(1);
             damageTimer.reset(damageCoolDown);
             hp -= damage;
-            System.out.println(hp);
             if (hp <= 0) {
                 destroy();
             }
