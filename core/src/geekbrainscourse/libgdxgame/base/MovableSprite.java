@@ -10,12 +10,19 @@ import geekbrainscourse.libgdxgame.math.IncrementMove;
 
 public class MovableSprite extends Sprite {
 
-    private IncrementMove move;
+    protected IncrementMove move;
 
-    protected MovableSprite(){}
+    protected MovableSprite(){
+        move = new IncrementMove(0, 0);
+    }
 
     public MovableSprite(float x, float y, TextureRegion region) {
         super(region);
+        move = new IncrementMove(x, y);
+    }
+
+    public MovableSprite(float x, float y, TextureRegion region, int rows, int cols, int frames) {
+        super(region, rows, cols, frames);
         move = new IncrementMove(x, y);
     }
 
@@ -29,6 +36,13 @@ public class MovableSprite extends Sprite {
 
     public void addDestination(float x, float y) {
         move.addDestination(x, y);
+    }
+
+    public void setPosition(float x, float y) {
+        move.setCurrent(x, y);
+        move.stop();
+        pos.x = x;
+        pos.y = y;
     }
 
     public void stop() {

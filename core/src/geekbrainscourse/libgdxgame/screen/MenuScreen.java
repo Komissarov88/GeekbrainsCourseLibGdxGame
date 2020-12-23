@@ -36,7 +36,7 @@ public class MenuScreen extends BaseScreen {
 
         bgm = Gdx.audio.newMusic(Gdx.files.internal("menu.mp3"));
         bgm.setLooping(true);
-        bgm.setVolume(0.8f);
+        bgm.setVolume(0.2f);
         bgm.play();
     }
 

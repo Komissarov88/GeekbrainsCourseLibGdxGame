@@ -40,6 +40,12 @@ public class Sprite extends Rect {
         }
     }
 
+    public void setFrame(int frame) {
+        if (frame < regions.length && frame >= 0) {
+            this.frame = frame;
+        }
+    }
+
     public void setHeightProportion(float height) {
         setHeight(height);
         float aspect = regions[frame].getRegionWidth() / (float) regions[frame].getRegionHeight();
