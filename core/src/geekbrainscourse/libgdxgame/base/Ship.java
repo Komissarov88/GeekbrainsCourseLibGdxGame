@@ -1,14 +1,13 @@
 package geekbrainscourse.libgdxgame.base;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import geekbrainscourse.libgdxgame.math.Rect;
-import geekbrainscourse.libgdxgame.math.Rnd;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
 import geekbrainscourse.libgdxgame.sprite.Bullet;
 import geekbrainscourse.libgdxgame.utils.CoolDownTimer;
+import geekbrainscourse.libgdxgame.utils.ShipSounds;
 
 public abstract class Ship extends MovableSprite {
 
@@ -17,7 +16,6 @@ public abstract class Ship extends MovableSprite {
     protected final BulletPool bulletPool;
     protected TextureRegion bulletRegion;
     protected Vector2 bulletVelocity;
-    protected Sound bulletSound;
     protected float bulletHeight;
     protected int damage;
     protected int hp;
@@ -30,6 +28,8 @@ public abstract class Ship extends MovableSprite {
 
     protected float height = 0.15f;
 
+    protected ShipSounds shipSounds;
+
     public Ship(BulletPool bulletPool) {
         this.bulletPool = bulletPool;
         fireTimer = new CoolDownTimer(autoFireCoolDown);
@@ -37,11 +37,11 @@ public abstract class Ship extends MovableSprite {
     }
 
     public Ship(float x, float y, TextureRegion region, int rows, int cols, int frames,
-                BulletPool bulletPool, Sound shot) {
+                BulletPool bulletPool, ShipSounds sounds) {
         super(x, y, region, rows, cols, frames);
         this.bulletPool = bulletPool;
         bulletHeight = 0.01f;
-        bulletSound = shot;
+        shipSounds = sounds;
         fireTimer = new CoolDownTimer(autoFireCoolDown);
         damageTimer = new CoolDownTimer(damageCoolDown);
         hp = 100;
@@ -50,6 +50,7 @@ public abstract class Ship extends MovableSprite {
     public void hit(int damage) {
         if (damageTimer.isCool()) {
             setFrame(1);
+            shipSounds.playHit();
             damageTimer.reset(damageCoolDown);
             hp -= damage;
             if (hp <= 0) {
@@ -80,6 +81,6 @@ public abstract class Ship extends MovableSprite {
     protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos.x, getTop(), bulletVelocity, bulletHeight, worldBounds, damage);
-        bulletSound.setVolume(bulletSound.play(),0.2f);
+        shipSounds.playShot();
     }
 }

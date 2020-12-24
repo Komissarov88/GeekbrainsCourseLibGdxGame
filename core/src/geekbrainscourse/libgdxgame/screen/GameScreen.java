@@ -2,7 +2,6 @@ package geekbrainscourse.libgdxgame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
@@ -12,10 +11,10 @@ import geekbrainscourse.libgdxgame.pool.BulletPool;
 import geekbrainscourse.libgdxgame.pool.EnemyPool;
 import geekbrainscourse.libgdxgame.sprite.BackgroundSprite;
 import geekbrainscourse.libgdxgame.sprite.Bullet;
-import geekbrainscourse.libgdxgame.sprite.EnemyShip;
 import geekbrainscourse.libgdxgame.sprite.PlayerShip;
 import geekbrainscourse.libgdxgame.sprite.Star;
 import geekbrainscourse.libgdxgame.utils.EnemyEmitter;
+import geekbrainscourse.libgdxgame.utils.ShipSounds;
 
 public class GameScreen extends BaseScreen {
 
@@ -31,7 +30,7 @@ public class GameScreen extends BaseScreen {
     private EnemyEmitter enemyEmitter;
 
     private Music bgm;
-    private Sound shot;
+    private ShipSounds shipSounds;
 
     @Override
     public void show() {
@@ -39,9 +38,9 @@ public class GameScreen extends BaseScreen {
         background = new BackgroundSprite(atlas.findRegion("bgJuno"));
         bulletPool = new BulletPool();
         enemyPool = new EnemyPool(bulletPool, worldBounds);
-        shot = Gdx.audio.newSound(Gdx.files.internal("sfx_weapon_singleshot13.wav"));
-        ship = new PlayerShip(0, -0.5f, atlas, bulletPool, shot);
-        enemyEmitter = new EnemyEmitter(atlas, worldBounds, shot, enemyPool);
+        shipSounds = new ShipSounds(0.5f);
+        ship = new PlayerShip(0, -0.5f, atlas, bulletPool, shipSounds);
+        enemyEmitter = new EnemyEmitter(atlas, worldBounds, shipSounds, enemyPool);
 
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -137,9 +136,9 @@ public class GameScreen extends BaseScreen {
     public void dispose() {
         atlas.dispose();
         bulletPool.dispose();
-        shot.dispose();
         enemyPool.dispose();
         bgm.dispose();
+        shipSounds.dispose();
         super.dispose();
     }
 }

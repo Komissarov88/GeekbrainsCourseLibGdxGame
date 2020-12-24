@@ -2,20 +2,20 @@ package geekbrainscourse.libgdxgame.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import geekbrainscourse.libgdxgame.base.Ship;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
+import geekbrainscourse.libgdxgame.utils.ShipSounds;
 
 public class PlayerShip extends Ship {
 
     private final float SPEED = 0.5f;
 
-    public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, Sound shot) {
+    public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, ShipSounds sound) {
         super(x, y, atlas.findRegion("spSpaceship"), 1, 2, 2,
-                bulletPool, shot);
+                bulletPool, sound);
         bulletRegion = atlas.findRegion("bullet");
         bulletVelocity = new Vector2(0, 0.5f);
         autoFire = false;

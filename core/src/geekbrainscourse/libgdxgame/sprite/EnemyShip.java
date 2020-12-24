@@ -1,6 +1,5 @@
 package geekbrainscourse.libgdxgame.sprite;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -9,6 +8,7 @@ import geekbrainscourse.libgdxgame.base.Ship;
 import geekbrainscourse.libgdxgame.math.Rect;
 import geekbrainscourse.libgdxgame.math.Rnd;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
+import geekbrainscourse.libgdxgame.utils.ShipSounds;
 
 public class EnemyShip extends Ship {
 
@@ -21,9 +21,9 @@ public class EnemyShip extends Ship {
         setAngle(180);
     }
 
-    public EnemyShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, Sound shot) {
+    public EnemyShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, ShipSounds sound) {
         super(x, y, atlas.findRegion("spEnemySpaceship"), 1, 2, 2,
-                bulletPool, shot);
+                bulletPool, sound);
         bulletRegion = atlas.findRegion("bullet");
         bulletVelocity = new Vector2(0, -0.5f);
         autoFire = false;
@@ -34,7 +34,7 @@ public class EnemyShip extends Ship {
     public void set(
             TextureRegion[] regions,
             TextureRegion bulletRegion,
-            Sound bulletSound,
+            ShipSounds sound,
             float bulletHeight,
             Vector2 bulletV,
             int damage,
@@ -45,7 +45,7 @@ public class EnemyShip extends Ship {
     ){
         this.regions = regions;
         this.bulletRegion = bulletRegion;
-        this.bulletSound = bulletSound;
+        this.shipSounds = sound;
         this.bulletHeight = bulletHeight;
         this.bulletVelocity = bulletV;
         this.damage = damage;
@@ -79,6 +79,6 @@ public class EnemyShip extends Ship {
     protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos.x, getBottom(), bulletVelocity, bulletHeight, worldBounds, damage);
-        bulletSound.setVolume(bulletSound.play(),0.2f);
+        shipSounds.playShot();
     }
 }

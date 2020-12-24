@@ -4,44 +4,58 @@ size: 2048,2048
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+Explosion
+  rotate: false
+  xy: 2, 146
+  size: 1152, 96
+  orig: 1152, 96
+  offset: 0, 0
+  index: -1
 bgJuno
   rotate: false
-  xy: 2, 667
+  xy: 2, 765
   size: 1024, 1024
   orig: 1024, 1024
   offset: 0, 0
   index: -1
 btPlay
   rotate: false
-  xy: 1028, 1583
+  xy: 2, 36
   size: 444, 108
   orig: 444, 108
   offset: 0, 0
   index: -1
 btQuit
   rotate: false
-  xy: 2, 36
+  xy: 1028, 1681
+  size: 444, 108
+  orig: 444, 108
+  offset: 0, 0
+  index: -1
+btRestart
+  rotate: false
+  xy: 1028, 1571
   size: 444, 108
   orig: 444, 108
   offset: 0, 0
   index: -1
 bullet
   rotate: false
-  xy: 2, 2
+  xy: 1474, 1757
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 spEnemySpaceship
   rotate: false
-  xy: 2, 146
+  xy: 2, 244
   size: 1100, 519
   orig: 1100, 519
   offset: 0, 0
   index: -1
 star
   rotate: false
-  xy: 448, 112
+  xy: 2, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
