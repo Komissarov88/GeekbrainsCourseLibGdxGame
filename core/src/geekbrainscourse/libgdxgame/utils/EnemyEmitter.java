@@ -1,6 +1,5 @@
 package geekbrainscourse.libgdxgame.utils;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -42,7 +41,7 @@ public class EnemyEmitter {
     private final Vector2 enemyBigBulletV = new Vector2(0, -0.3f);
 
     private final Rect worldBounds;
-    private final Sound bulletSound;
+    private final ShipResources shipResources;
     private final TextureRegion bulletRegion;
 
     private final TextureRegion[] enemySmallRegions;
@@ -53,7 +52,7 @@ public class EnemyEmitter {
 
     private float generateTimer;
 
-    public EnemyEmitter(TextureAtlas atlas, Rect worldBounds, Sound bulletSound, EnemyPool enemyPool) {
+    public EnemyEmitter(TextureAtlas atlas, Rect worldBounds, ShipResources sound, EnemyPool enemyPool) {
         this.bulletRegion = atlas.findRegion("bullet");
         TextureRegion enemySmallRegion = atlas.findRegion("spEnemySpaceship");
         this.enemySmallRegions = Regions.split(enemySmallRegion, 1, 2, 2);
@@ -62,7 +61,7 @@ public class EnemyEmitter {
         TextureRegion enemyBigRegion = atlas.findRegion("spEnemySpaceship");
         this.enemyBigRegions = Regions.split(enemyBigRegion, 1, 2, 2);
         this.worldBounds = worldBounds;
-        this.bulletSound = bulletSound;
+        this.shipResources = sound;
         this.enemyPool = enemyPool;
     }
 
@@ -76,7 +75,7 @@ public class EnemyEmitter {
                 enemy.set(
                         enemySmallRegions,
                         bulletRegion,
-                        bulletSound,
+                        shipResources,
                         ENEMY_SMALL_BULLET_HEIGHT,
                         enemySmallBulletV,
                         ENEMY_SMALL_BULLET_DAMAGE,
@@ -89,7 +88,7 @@ public class EnemyEmitter {
                 enemy.set(
                         enemyMiddleRegions,
                         bulletRegion,
-                        bulletSound,
+                        shipResources,
                         ENEMY_MIDDLE_BULLET_HEIGHT,
                         enemyMiddleBulletV,
                         ENEMY_MIDDLE_BULLET_DAMAGE,
@@ -102,7 +101,7 @@ public class EnemyEmitter {
                 enemy.set(
                         enemyBigRegions,
                         bulletRegion,
-                        bulletSound,
+                        shipResources,
                         ENEMY_BIG_BULLET_HEIGHT,
                         enemyBigBulletV,
                         ENEMY_BIG_BULLET_DAMAGE,

@@ -3,26 +3,25 @@ package geekbrainscourse.libgdxgame.sprite;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import geekbrainscourse.libgdxgame.base.BaseButton;
+import java.awt.HeadlessException;
+
+import geekbrainscourse.libgdxgame.base.Button;
 import geekbrainscourse.libgdxgame.math.Rect;
 
-public class ButtonExit extends BaseButton {
-
-    private static final float HEIGHT = 0.19f;
-    private static final float MARGIN = 0.03f;
-
-    public ButtonExit(TextureRegion region) {
-        super(region);
-    }
+public class ButtonExit extends Button {
 
     public ButtonExit(TextureRegion region, int rows, int cols, int frames) {
-        super(region, rows, cols, frames);
+        super(region, rows, cols, frames, 0f, 0f);
     }
 
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(HEIGHT);
+        if (worldBounds.getWidth() < worldBounds.getHeight()) {
+            setWidthProportion(HEIGHT);
+        } else {
+            setHeightProportion(HEIGHT);
+        }
         setBottom(worldBounds.getBottom() + MARGIN);
         setRight(worldBounds.getRight() - MARGIN);
     }

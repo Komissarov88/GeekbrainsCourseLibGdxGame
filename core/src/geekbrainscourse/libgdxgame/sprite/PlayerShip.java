@@ -2,31 +2,35 @@ package geekbrainscourse.libgdxgame.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import geekbrainscourse.libgdxgame.base.Ship;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
+import geekbrainscourse.libgdxgame.utils.ShipResources;
 
 public class PlayerShip extends Ship {
 
+    private static final int HP = 10;
+
     private final float SPEED = 0.5f;
 
-    public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, Sound shot) {
+    public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, ShipResources sound) {
         super(x, y, atlas.findRegion("spSpaceship"), 1, 2, 2,
-                bulletPool, shot);
+                bulletPool, sound);
         bulletRegion = atlas.findRegion("bullet");
         bulletVelocity = new Vector2(0, 0.5f);
-        autoFire = false;
         damage = 1;
+        hp = HP;
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
         checkStop(delta);
-        keyboardControls(delta);
+        if ( !isExploding) {
+            keyboardControls(delta);
+        }
     }
 
     public void checkStop(float delta) {
@@ -62,7 +66,7 @@ public class PlayerShip extends Ship {
             addDestination(0, -SPEED *delta);
         }
 
-        if (fireTimer.isCool() && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || autoFire)) {
+        if (!isExploding && fireTimer.isCool() && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || autoFire)) {
             shoot();
             fireTimer.reset(autoFireCoolDown);
         }
@@ -73,5 +77,11 @@ public class PlayerShip extends Ship {
             autoFire = !autoFire;
         }
         return false;
+    }
+
+    @Override
+    public void flushDestroy() {
+        super.flushDestroy();
+        hp = HP;
     }
 }

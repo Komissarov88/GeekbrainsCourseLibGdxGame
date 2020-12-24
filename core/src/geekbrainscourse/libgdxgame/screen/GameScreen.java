@@ -2,20 +2,21 @@ package geekbrainscourse.libgdxgame.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import geekbrainscourse.libgdxgame.base.BaseScreen;
+import geekbrainscourse.libgdxgame.base.Button;
+import geekbrainscourse.libgdxgame.base.ButtonPressed;
 import geekbrainscourse.libgdxgame.base.Ship;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
 import geekbrainscourse.libgdxgame.pool.EnemyPool;
 import geekbrainscourse.libgdxgame.sprite.BackgroundSprite;
 import geekbrainscourse.libgdxgame.sprite.Bullet;
-import geekbrainscourse.libgdxgame.sprite.EnemyShip;
 import geekbrainscourse.libgdxgame.sprite.PlayerShip;
 import geekbrainscourse.libgdxgame.sprite.Star;
 import geekbrainscourse.libgdxgame.utils.EnemyEmitter;
+import geekbrainscourse.libgdxgame.utils.ShipResources;
 
 public class GameScreen extends BaseScreen {
 
@@ -31,7 +32,10 @@ public class GameScreen extends BaseScreen {
     private EnemyEmitter enemyEmitter;
 
     private Music bgm;
-    private Sound shot;
+    private ShipResources shipResources;
+
+    private Button resetButton;
+    private Button quitButton;
 
     @Override
     public void show() {
@@ -39,9 +43,9 @@ public class GameScreen extends BaseScreen {
         background = new BackgroundSprite(atlas.findRegion("bgJuno"));
         bulletPool = new BulletPool();
         enemyPool = new EnemyPool(bulletPool, worldBounds);
-        shot = Gdx.audio.newSound(Gdx.files.internal("sfx_weapon_singleshot13.wav"));
-        ship = new PlayerShip(0, -0.5f, atlas, bulletPool, shot);
-        enemyEmitter = new EnemyEmitter(atlas, worldBounds, shot, enemyPool);
+        shipResources = new ShipResources(0.5f, atlas);
+        ship = new PlayerShip(0, -0.5f, atlas, bulletPool, shipResources);
+        enemyEmitter = new EnemyEmitter(atlas, worldBounds, shipResources, enemyPool);
 
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -52,6 +56,23 @@ public class GameScreen extends BaseScreen {
         bgm.setLooping(true);
         bgm.setVolume(0.2f);
         bgm.play();
+
+        resetButton = new Button(atlas.findRegion("btRestart"), 1, 2, 2,
+                0, 0.1f);
+        resetButton.setAction(new ButtonPressed() {
+            @Override
+            public void onButtonPress() {
+                resetGame();
+            }
+        });
+        quitButton = new Button(atlas.findRegion("btQuit"), 1, 2, 2,
+                0, -0.1f);
+        quitButton.setAction(new ButtonPressed() {
+            @Override
+            public void onButtonPress() {
+                Gdx.app.exit();
+            }
+        });
     }
 
     @Override
@@ -68,7 +89,12 @@ public class GameScreen extends BaseScreen {
         }
         bulletPool.drawActiveObjects(batch);
         enemyPool.drawActiveObjects(batch);
-        ship.draw(batch);
+        if (ship.isDestroyed()) {
+            resetButton.draw(batch);
+            quitButton.draw(batch);
+        } else {
+            ship.draw(batch);
+        }
         batch.end();
     }
 
@@ -85,7 +111,20 @@ public class GameScreen extends BaseScreen {
         enemyPool.updateActiveObjects(delta);
         ship.update(delta);
         checkCollision();
-        enemyEmitter.generate(delta);
+        if (!ship.isDestroyed()) {
+            enemyEmitter.generate(delta);
+        }
+    }
+
+    public void resetGame() {
+        for (Ship s : enemyPool.getActiveObjects()) {
+            s.destroy();
+        }
+        for (Bullet b : bulletPool.getActiveObjects()) {
+            b.destroy();
+        }
+        ship.setPosition(0, -0.5f);
+        ship.flushDestroy();
     }
 
     public void checkCollision() {
@@ -111,12 +150,28 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.resize(worldBounds);
         }
+        resetButton.resize(worldBounds);
+        quitButton.resize(worldBounds);
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         super.touchDown(screenX, screenY, pointer, button);
+        if (ship.isDestroyed()) {
+            resetButton.touchDown(touch, pointer, button);
+            quitButton.touchDown(touch, pointer, button);
+        }
         ship.setDestination(touch.x, touch.y);
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        super.touchUp(screenX, screenY, pointer, button);
+        if (ship.isDestroyed()) {
+            resetButton.touchUp(touch, pointer, button);
+            quitButton.touchUp(touch, pointer, button);
+        }
         return false;
     }
 
@@ -137,9 +192,9 @@ public class GameScreen extends BaseScreen {
     public void dispose() {
         atlas.dispose();
         bulletPool.dispose();
-        shot.dispose();
         enemyPool.dispose();
         bgm.dispose();
+        shipResources.dispose();
         super.dispose();
     }
 }

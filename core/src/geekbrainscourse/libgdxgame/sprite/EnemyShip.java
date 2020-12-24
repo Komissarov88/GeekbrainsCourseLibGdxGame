@@ -1,6 +1,5 @@
 package geekbrainscourse.libgdxgame.sprite;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -9,6 +8,7 @@ import geekbrainscourse.libgdxgame.base.Ship;
 import geekbrainscourse.libgdxgame.math.Rect;
 import geekbrainscourse.libgdxgame.math.Rnd;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
+import geekbrainscourse.libgdxgame.utils.ShipResources;
 
 public class EnemyShip extends Ship {
 
@@ -21,9 +21,9 @@ public class EnemyShip extends Ship {
         setAngle(180);
     }
 
-    public EnemyShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, Sound shot) {
+    public EnemyShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, ShipResources sound) {
         super(x, y, atlas.findRegion("spEnemySpaceship"), 1, 2, 2,
-                bulletPool, shot);
+                bulletPool, sound);
         bulletRegion = atlas.findRegion("bullet");
         bulletVelocity = new Vector2(0, -0.5f);
         autoFire = false;
@@ -34,7 +34,7 @@ public class EnemyShip extends Ship {
     public void set(
             TextureRegion[] regions,
             TextureRegion bulletRegion,
-            Sound bulletSound,
+            ShipResources sound,
             float bulletHeight,
             Vector2 bulletV,
             int damage,
@@ -45,7 +45,7 @@ public class EnemyShip extends Ship {
     ){
         this.regions = regions;
         this.bulletRegion = bulletRegion;
-        this.bulletSound = bulletSound;
+        this.shipResources = sound;
         this.bulletHeight = bulletHeight;
         this.bulletVelocity = bulletV;
         this.damage = damage;
@@ -58,18 +58,16 @@ public class EnemyShip extends Ship {
     @Override
     public void update(float delta) {
         super.update(delta);
-        if (fireTimer.isCool() && autoFire) {
-            shoot();
-            fireTimer.reset(Rnd.nextFloat(autoFireCoolDown *2, autoFireCoolDown *5));
-        }
-        if (getBottom() < worldBounds.getTop() - getHalfHeight()) {
-            addDestination(v.x*delta / 5, v.y*delta / 5);
-            autoFire = true;
+        if (isExploding) {
             return;
         }
-        if (getBottom() < worldBounds.getBottom()) {
-            autoFire = false;
-            addDestination(v.x*delta, v.y*delta);
+        if (getBottom() < worldBounds.getTop() - getHalfHeight() &&
+                getBottom() >= worldBounds.getBottom()) {
+            addDestination(v.x*delta / 5, v.y*delta / 5);
+            if (fireTimer.isCool()) {
+                shoot();
+                fireTimer.reset(Rnd.nextFloat(autoFireCoolDown * 4, autoFireCoolDown * 8));
+            }
             return;
         }
         addDestination(v.x*delta, v.y*delta);
@@ -79,6 +77,6 @@ public class EnemyShip extends Ship {
     protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos.x, getBottom(), bulletVelocity, bulletHeight, worldBounds, damage);
-        bulletSound.setVolume(bulletSound.play(),0.2f);
+        shipResources.playShot();
     }
 }
