@@ -58,21 +58,16 @@ public class EnemyShip extends Ship {
     @Override
     public void update(float delta) {
         super.update(delta);
-        if (isExploding){
+        if (isExploding) {
             return;
         }
-        if (fireTimer.isCool() && autoFire) {
-            shoot();
-            fireTimer.reset(Rnd.nextFloat(autoFireCoolDown * 4, autoFireCoolDown * 8));
-        }
-        if (getBottom() < worldBounds.getTop() - getHalfHeight()) {
+        if (getBottom() < worldBounds.getTop() - getHalfHeight() &&
+                getBottom() >= worldBounds.getBottom()) {
             addDestination(v.x*delta / 5, v.y*delta / 5);
-            autoFire = true;
-            return;
-        }
-        if (getBottom() < worldBounds.getBottom()) {
-            autoFire = false;
-            addDestination(v.x*delta, v.y*delta);
+            if (fireTimer.isCool()) {
+                shoot();
+                fireTimer.reset(Rnd.nextFloat(autoFireCoolDown * 4, autoFireCoolDown * 8));
+            }
             return;
         }
         addDestination(v.x*delta, v.y*delta);

@@ -73,4 +73,10 @@ public class PlayerShip extends Ship {
         }
         return false;
     }
+
+    @Override
+    public void flushDestroy() {
+        super.flushDestroy();
+        hp = 100;
+    }
 }

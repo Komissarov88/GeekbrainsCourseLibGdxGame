@@ -6,15 +6,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import geekbrainscourse.libgdxgame.base.BaseButton;
 import geekbrainscourse.libgdxgame.math.Rect;
 
-public class ButtonRestart extends BaseButton {
+public class Button extends BaseButton {
 
     private static final float HEIGHT = 0.19f;
+    private static final float MARGIN = 0.03f;
 
-    public ButtonRestart(TextureRegion region) {
-        super(region);
-    }
-
-    public ButtonRestart(TextureRegion region, int rows, int cols, int frames) {
+    public Button(TextureRegion region, int rows, int cols, int frames) {
         super(region, rows, cols, frames);
     }
 
@@ -22,8 +19,11 @@ public class ButtonRestart extends BaseButton {
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
         setHeightProportion(HEIGHT);
-        setBottom( -getHalfHeight());
-        setRight( -getHalfWidth());
+    }
+
+    public void setBottomRight(float x, float y) {
+        setBottom( x);
+        setRight( y);
     }
 
     @Override

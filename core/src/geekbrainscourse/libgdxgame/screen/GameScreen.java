@@ -77,6 +77,10 @@ public class GameScreen extends BaseScreen {
     }
 
     public void updateObjects(float delta) {
+        if (ship.isDestroyed()) {
+            resetGame();
+            return;
+        }
         for (Star star : stars) {
             star.update(delta);
         }
@@ -85,6 +89,17 @@ public class GameScreen extends BaseScreen {
         ship.update(delta);
         checkCollision();
         enemyEmitter.generate(delta);
+    }
+
+    public void resetGame() {
+        for (Ship s : enemyPool.getActiveObjects()) {
+            s.destroy();
+        }
+        for (Bullet b : bulletPool.getActiveObjects()) {
+            b.destroy();
+        }
+        ship.setPosition(0, -0.5f);
+        ship.flushDestroy();
     }
 
     public void checkCollision() {
