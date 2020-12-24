@@ -41,7 +41,7 @@ public class EnemyEmitter {
     private final Vector2 enemyBigBulletV = new Vector2(0, -0.3f);
 
     private final Rect worldBounds;
-    private final ShipSounds shipSounds;
+    private final ShipResources shipResources;
     private final TextureRegion bulletRegion;
 
     private final TextureRegion[] enemySmallRegions;
@@ -52,7 +52,7 @@ public class EnemyEmitter {
 
     private float generateTimer;
 
-    public EnemyEmitter(TextureAtlas atlas, Rect worldBounds, ShipSounds sound, EnemyPool enemyPool) {
+    public EnemyEmitter(TextureAtlas atlas, Rect worldBounds, ShipResources sound, EnemyPool enemyPool) {
         this.bulletRegion = atlas.findRegion("bullet");
         TextureRegion enemySmallRegion = atlas.findRegion("spEnemySpaceship");
         this.enemySmallRegions = Regions.split(enemySmallRegion, 1, 2, 2);
@@ -61,7 +61,7 @@ public class EnemyEmitter {
         TextureRegion enemyBigRegion = atlas.findRegion("spEnemySpaceship");
         this.enemyBigRegions = Regions.split(enemyBigRegion, 1, 2, 2);
         this.worldBounds = worldBounds;
-        this.shipSounds = sound;
+        this.shipResources = sound;
         this.enemyPool = enemyPool;
     }
 
@@ -75,7 +75,7 @@ public class EnemyEmitter {
                 enemy.set(
                         enemySmallRegions,
                         bulletRegion,
-                        shipSounds,
+                        shipResources,
                         ENEMY_SMALL_BULLET_HEIGHT,
                         enemySmallBulletV,
                         ENEMY_SMALL_BULLET_DAMAGE,
@@ -88,7 +88,7 @@ public class EnemyEmitter {
                 enemy.set(
                         enemyMiddleRegions,
                         bulletRegion,
-                        shipSounds,
+                        shipResources,
                         ENEMY_MIDDLE_BULLET_HEIGHT,
                         enemyMiddleBulletV,
                         ENEMY_MIDDLE_BULLET_DAMAGE,
@@ -101,7 +101,7 @@ public class EnemyEmitter {
                 enemy.set(
                         enemyBigRegions,
                         bulletRegion,
-                        shipSounds,
+                        shipResources,
                         ENEMY_BIG_BULLET_HEIGHT,
                         enemyBigBulletV,
                         ENEMY_BIG_BULLET_DAMAGE,

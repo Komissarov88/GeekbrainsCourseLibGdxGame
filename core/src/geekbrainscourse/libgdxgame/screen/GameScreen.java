@@ -14,7 +14,7 @@ import geekbrainscourse.libgdxgame.sprite.Bullet;
 import geekbrainscourse.libgdxgame.sprite.PlayerShip;
 import geekbrainscourse.libgdxgame.sprite.Star;
 import geekbrainscourse.libgdxgame.utils.EnemyEmitter;
-import geekbrainscourse.libgdxgame.utils.ShipSounds;
+import geekbrainscourse.libgdxgame.utils.ShipResources;
 
 public class GameScreen extends BaseScreen {
 
@@ -30,7 +30,7 @@ public class GameScreen extends BaseScreen {
     private EnemyEmitter enemyEmitter;
 
     private Music bgm;
-    private ShipSounds shipSounds;
+    private ShipResources shipResources;
 
     @Override
     public void show() {
@@ -38,9 +38,9 @@ public class GameScreen extends BaseScreen {
         background = new BackgroundSprite(atlas.findRegion("bgJuno"));
         bulletPool = new BulletPool();
         enemyPool = new EnemyPool(bulletPool, worldBounds);
-        shipSounds = new ShipSounds(0.5f);
-        ship = new PlayerShip(0, -0.5f, atlas, bulletPool, shipSounds);
-        enemyEmitter = new EnemyEmitter(atlas, worldBounds, shipSounds, enemyPool);
+        shipResources = new ShipResources(0.5f, atlas);
+        ship = new PlayerShip(0, -0.5f, atlas, bulletPool, shipResources);
+        enemyEmitter = new EnemyEmitter(atlas, worldBounds, shipResources, enemyPool);
 
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -138,7 +138,7 @@ public class GameScreen extends BaseScreen {
         bulletPool.dispose();
         enemyPool.dispose();
         bgm.dispose();
-        shipSounds.dispose();
+        shipResources.dispose();
         super.dispose();
     }
 }

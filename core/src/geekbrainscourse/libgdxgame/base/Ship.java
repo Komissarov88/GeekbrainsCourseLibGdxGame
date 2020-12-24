@@ -1,13 +1,15 @@
 package geekbrainscourse.libgdxgame.base;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
 import geekbrainscourse.libgdxgame.math.Rect;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
 import geekbrainscourse.libgdxgame.sprite.Bullet;
+import geekbrainscourse.libgdxgame.utils.AnimationHelper;
 import geekbrainscourse.libgdxgame.utils.CoolDownTimer;
-import geekbrainscourse.libgdxgame.utils.ShipSounds;
+import geekbrainscourse.libgdxgame.utils.ShipResources;
 
 public abstract class Ship extends MovableSprite {
 
@@ -28,34 +30,46 @@ public abstract class Ship extends MovableSprite {
 
     protected float height = 0.15f;
 
-    protected ShipSounds shipSounds;
+    protected ShipResources shipResources;
+    protected boolean isExploding;
+    protected AnimationHelper explodingAnimation;
 
     public Ship(BulletPool bulletPool) {
         this.bulletPool = bulletPool;
         fireTimer = new CoolDownTimer(autoFireCoolDown);
         damageTimer = new CoolDownTimer(damageCoolDown);
+        isExploding = false;
+        explodingAnimation = new AnimationHelper(12, 12);
     }
 
     public Ship(float x, float y, TextureRegion region, int rows, int cols, int frames,
-                BulletPool bulletPool, ShipSounds sounds) {
+                BulletPool bulletPool, ShipResources sounds) {
         super(x, y, region, rows, cols, frames);
         this.bulletPool = bulletPool;
         bulletHeight = 0.01f;
-        shipSounds = sounds;
+        shipResources = sounds;
         fireTimer = new CoolDownTimer(autoFireCoolDown);
         damageTimer = new CoolDownTimer(damageCoolDown);
         hp = 100;
+        isExploding = false;
+        explodingAnimation = new AnimationHelper(12, 12);
     }
 
     public void hit(int damage) {
         if (damageTimer.isCool()) {
             setFrame(1);
-            shipSounds.playHit();
             damageTimer.reset(damageCoolDown);
             hp -= damage;
-            if (hp <= 0) {
-                destroy();
+            if (isExploding) {
+                return;
             }
+            if (hp <= 0) {
+                explodingAnimation.start();
+                isExploding = true;
+                shipResources.playExplosion();
+                return;
+            }
+            shipResources.playHit();
         }
     }
 
@@ -63,7 +77,7 @@ public abstract class Ship extends MovableSprite {
     public void update(float delta) {
         fireTimer.update(delta);
         damageTimer.update(delta);
-        if (damageTimer.isCool()) {
+        if (!isExploding && damageTimer.isCool()) {
             setFrame(0);
         } else {
             setFrame(1);
@@ -81,6 +95,26 @@ public abstract class Ship extends MovableSprite {
     protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos.x, getTop(), bulletVelocity, bulletHeight, worldBounds, damage);
-        shipSounds.playShot();
+        shipResources.playShot();
+    }
+
+    @Override
+    public void draw(SpriteBatch batch) {
+        super.draw(batch);
+        if (isExploding) {
+            if (explodingAnimation.isPlayedOnce()) {
+                destroy();
+                return;
+            }
+            shipResources.setHeightProportion(getHeight() * 1.5f);
+            shipResources.drawExplosion(pos, explodingAnimation.getCurrentFrame(), batch);
+        }
+    }
+
+    @Override
+    public void flushDestroy() {
+        super.flushDestroy();
+        isExploding = false;
+        explodingAnimation.flush();
     }
 }

@@ -8,7 +8,7 @@ import geekbrainscourse.libgdxgame.base.Ship;
 import geekbrainscourse.libgdxgame.math.Rect;
 import geekbrainscourse.libgdxgame.math.Rnd;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
-import geekbrainscourse.libgdxgame.utils.ShipSounds;
+import geekbrainscourse.libgdxgame.utils.ShipResources;
 
 public class EnemyShip extends Ship {
 
@@ -21,7 +21,7 @@ public class EnemyShip extends Ship {
         setAngle(180);
     }
 
-    public EnemyShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, ShipSounds sound) {
+    public EnemyShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, ShipResources sound) {
         super(x, y, atlas.findRegion("spEnemySpaceship"), 1, 2, 2,
                 bulletPool, sound);
         bulletRegion = atlas.findRegion("bullet");
@@ -34,7 +34,7 @@ public class EnemyShip extends Ship {
     public void set(
             TextureRegion[] regions,
             TextureRegion bulletRegion,
-            ShipSounds sound,
+            ShipResources sound,
             float bulletHeight,
             Vector2 bulletV,
             int damage,
@@ -45,7 +45,7 @@ public class EnemyShip extends Ship {
     ){
         this.regions = regions;
         this.bulletRegion = bulletRegion;
-        this.shipSounds = sound;
+        this.shipResources = sound;
         this.bulletHeight = bulletHeight;
         this.bulletVelocity = bulletV;
         this.damage = damage;
@@ -58,9 +58,12 @@ public class EnemyShip extends Ship {
     @Override
     public void update(float delta) {
         super.update(delta);
+        if (isExploding){
+            return;
+        }
         if (fireTimer.isCool() && autoFire) {
             shoot();
-            fireTimer.reset(Rnd.nextFloat(autoFireCoolDown *2, autoFireCoolDown *5));
+            fireTimer.reset(Rnd.nextFloat(autoFireCoolDown * 4, autoFireCoolDown * 8));
         }
         if (getBottom() < worldBounds.getTop() - getHalfHeight()) {
             addDestination(v.x*delta / 5, v.y*delta / 5);
@@ -79,6 +82,6 @@ public class EnemyShip extends Ship {
     protected void shoot() {
         Bullet bullet = bulletPool.obtain();
         bullet.set(this, bulletRegion, pos.x, getBottom(), bulletVelocity, bulletHeight, worldBounds, damage);
-        shipSounds.playShot();
+        shipResources.playShot();
     }
 }

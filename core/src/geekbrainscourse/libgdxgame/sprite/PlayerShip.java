@@ -7,18 +7,17 @@ import com.badlogic.gdx.math.Vector2;
 
 import geekbrainscourse.libgdxgame.base.Ship;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
-import geekbrainscourse.libgdxgame.utils.ShipSounds;
+import geekbrainscourse.libgdxgame.utils.ShipResources;
 
 public class PlayerShip extends Ship {
 
     private final float SPEED = 0.5f;
 
-    public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, ShipSounds sound) {
+    public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, ShipResources sound) {
         super(x, y, atlas.findRegion("spSpaceship"), 1, 2, 2,
                 bulletPool, sound);
         bulletRegion = atlas.findRegion("bullet");
         bulletVelocity = new Vector2(0, 0.5f);
-        autoFire = false;
         damage = 1;
     }
 
@@ -62,7 +61,7 @@ public class PlayerShip extends Ship {
             addDestination(0, -SPEED *delta);
         }
 
-        if (fireTimer.isCool() && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || autoFire)) {
+        if (!isExploding && fireTimer.isCool() && (Gdx.input.isKeyPressed(Input.Keys.SPACE) || autoFire)) {
             shoot();
             fireTimer.reset(autoFireCoolDown);
         }
