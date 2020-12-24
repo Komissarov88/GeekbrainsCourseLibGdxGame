@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
 import geekbrainscourse.libgdxgame.base.Sprite;
-import geekbrainscourse.libgdxgame.math.Rect;
 
 public class ShipResources {
 

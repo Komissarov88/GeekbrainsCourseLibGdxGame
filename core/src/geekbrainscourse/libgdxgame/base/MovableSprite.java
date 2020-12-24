@@ -1,11 +1,7 @@
 package geekbrainscourse.libgdxgame.base;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import geekbrainscourse.libgdxgame.base.Sprite;
 import geekbrainscourse.libgdxgame.math.IncrementMove;
 
 public class MovableSprite extends Sprite {

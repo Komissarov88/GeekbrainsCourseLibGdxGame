@@ -3,8 +3,6 @@ package geekbrainscourse.libgdxgame.sprite;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import java.awt.HeadlessException;
-
 import geekbrainscourse.libgdxgame.base.Button;
 import geekbrainscourse.libgdxgame.math.Rect;
 
