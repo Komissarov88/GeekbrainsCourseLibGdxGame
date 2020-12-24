@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import geekbrainscourse.libgdxgame.base.BaseScreen;
+import geekbrainscourse.libgdxgame.base.Button;
+import geekbrainscourse.libgdxgame.base.ButtonPressed;
 import geekbrainscourse.libgdxgame.base.Ship;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
 import geekbrainscourse.libgdxgame.pool.EnemyPool;
@@ -32,6 +34,8 @@ public class GameScreen extends BaseScreen {
     private Music bgm;
     private ShipResources shipResources;
 
+    private Button resetButton;
+
     @Override
     public void show() {
         atlas = new TextureAtlas("main.atlas");
@@ -51,6 +55,14 @@ public class GameScreen extends BaseScreen {
         bgm.setLooping(true);
         bgm.setVolume(0.2f);
         bgm.play();
+
+        resetButton = new Button(atlas.findRegion("btRestart"), 1, 2, 2, 0.15f, 0.03f);
+        resetButton.setAction(new ButtonPressed() {
+            @Override
+            public void onButtonPress() {
+                resetGame();
+            }
+        });
     }
 
     @Override
@@ -67,7 +79,11 @@ public class GameScreen extends BaseScreen {
         }
         bulletPool.drawActiveObjects(batch);
         enemyPool.drawActiveObjects(batch);
-        ship.draw(batch);
+        if (ship.isDestroyed()) {
+            resetButton.draw(batch);
+        } else {
+            ship.draw(batch);
+        }
         batch.end();
     }
 
@@ -77,10 +93,6 @@ public class GameScreen extends BaseScreen {
     }
 
     public void updateObjects(float delta) {
-        if (ship.isDestroyed()) {
-            resetGame();
-            return;
-        }
         for (Star star : stars) {
             star.update(delta);
         }
@@ -88,7 +100,9 @@ public class GameScreen extends BaseScreen {
         enemyPool.updateActiveObjects(delta);
         ship.update(delta);
         checkCollision();
-        enemyEmitter.generate(delta);
+        if (!ship.isDestroyed()) {
+            enemyEmitter.generate(delta);
+        }
     }
 
     public void resetGame() {
@@ -125,12 +139,25 @@ public class GameScreen extends BaseScreen {
         for (Star star : stars) {
             star.resize(worldBounds);
         }
+        resetButton.resize(worldBounds);
     }
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         super.touchDown(screenX, screenY, pointer, button);
+        if (ship.isDestroyed()) {
+            resetButton.touchDown(touch, pointer, button);
+        }
         ship.setDestination(touch.x, touch.y);
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        super.touchUp(screenX, screenY, pointer, button);
+        if (ship.isDestroyed()) {
+            resetButton.touchUp(touch, pointer, button);
+        }
         return false;
     }
 

@@ -11,6 +11,8 @@ import geekbrainscourse.libgdxgame.utils.ShipResources;
 
 public class PlayerShip extends Ship {
 
+    private static final int HP = 10;
+
     private final float SPEED = 0.5f;
 
     public PlayerShip(float x, float y, TextureAtlas atlas, BulletPool bulletPool, ShipResources sound) {
@@ -19,6 +21,7 @@ public class PlayerShip extends Ship {
         bulletRegion = atlas.findRegion("bullet");
         bulletVelocity = new Vector2(0, 0.5f);
         damage = 1;
+        hp = HP;
     }
 
     @Override
@@ -77,6 +80,6 @@ public class PlayerShip extends Ship {
     @Override
     public void flushDestroy() {
         super.flushDestroy();
-        hp = 100;
+        hp = HP;
     }
 }

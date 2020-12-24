@@ -50,7 +50,6 @@ public abstract class Ship extends MovableSprite {
         shipResources = sounds;
         fireTimer = new CoolDownTimer(autoFireCoolDown);
         damageTimer = new CoolDownTimer(damageCoolDown);
-        hp = 100;
         isExploding = false;
         explodingAnimation = new AnimationHelper(12, 12);
     }
