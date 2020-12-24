@@ -11,13 +11,15 @@ public class Button extends Sprite {
     private boolean pressed;
     private ButtonPressed action;
 
-    protected float height;
-    protected float margin;
+    protected static final float HEIGHT = 0.15f;
+    protected static final float MARGIN = 0.03f;
+    protected float x;
+    protected float y;
 
-    public Button(TextureRegion region, int rows, int cols, int frames, float height, float margin) {
+    public Button(TextureRegion region, int rows, int cols, int frames, float x, float y) {
         super(region, rows, cols, frames);
-        this.height = height;
-        this.margin = margin;
+        this.x = x;
+        this.y = y;
     }
 
     public boolean touchDown(Vector2 touch, int pointer, int button) {
@@ -46,7 +48,8 @@ public class Button extends Sprite {
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(height);
+        setHeightProportion(HEIGHT);
+        pos.set(x, y);
     }
 
     public void setAction(ButtonPressed e) {

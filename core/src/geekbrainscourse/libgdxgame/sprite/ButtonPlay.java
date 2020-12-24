@@ -12,16 +12,20 @@ public class ButtonPlay extends Button {
     private final Game game;
 
     public ButtonPlay(TextureRegion region, int rows, int cols, int frames, Game game) {
-        super(region, rows, cols, frames, 0.15f, 0.03f);
+        super(region, rows, cols, frames, 0f, 0f);
         this.game = game;
     }
 
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
-        setHeightProportion(height);
-        setBottom(worldBounds.getBottom() + margin);
-        setLeft(worldBounds.getLeft() + margin);
+        if (worldBounds.getWidth() < worldBounds.getHeight()) {
+            setWidthProportion(HEIGHT);
+        } else {
+            setHeightProportion(HEIGHT);
+        }
+        setBottom(worldBounds.getBottom() + MARGIN);
+        setLeft(worldBounds.getLeft() + MARGIN);
     }
 
     @Override

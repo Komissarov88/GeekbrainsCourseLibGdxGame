@@ -28,7 +28,9 @@ public class PlayerShip extends Ship {
     public void update(float delta) {
         super.update(delta);
         checkStop(delta);
-        keyboardControls(delta);
+        if ( !isExploding) {
+            keyboardControls(delta);
+        }
     }
 
     public void checkStop(float delta) {

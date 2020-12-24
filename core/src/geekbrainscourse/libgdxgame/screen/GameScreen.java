@@ -35,6 +35,7 @@ public class GameScreen extends BaseScreen {
     private ShipResources shipResources;
 
     private Button resetButton;
+    private Button quitButton;
 
     @Override
     public void show() {
@@ -56,11 +57,20 @@ public class GameScreen extends BaseScreen {
         bgm.setVolume(0.2f);
         bgm.play();
 
-        resetButton = new Button(atlas.findRegion("btRestart"), 1, 2, 2, 0.15f, 0.03f);
+        resetButton = new Button(atlas.findRegion("btRestart"), 1, 2, 2,
+                0, 0.1f);
         resetButton.setAction(new ButtonPressed() {
             @Override
             public void onButtonPress() {
                 resetGame();
+            }
+        });
+        quitButton = new Button(atlas.findRegion("btQuit"), 1, 2, 2,
+                0, -0.1f);
+        quitButton.setAction(new ButtonPressed() {
+            @Override
+            public void onButtonPress() {
+                Gdx.app.exit();
             }
         });
     }
@@ -81,6 +91,7 @@ public class GameScreen extends BaseScreen {
         enemyPool.drawActiveObjects(batch);
         if (ship.isDestroyed()) {
             resetButton.draw(batch);
+            quitButton.draw(batch);
         } else {
             ship.draw(batch);
         }
@@ -140,6 +151,7 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         resetButton.resize(worldBounds);
+        quitButton.resize(worldBounds);
     }
 
     @Override
@@ -147,6 +159,7 @@ public class GameScreen extends BaseScreen {
         super.touchDown(screenX, screenY, pointer, button);
         if (ship.isDestroyed()) {
             resetButton.touchDown(touch, pointer, button);
+            quitButton.touchDown(touch, pointer, button);
         }
         ship.setDestination(touch.x, touch.y);
         return false;
@@ -157,6 +170,7 @@ public class GameScreen extends BaseScreen {
         super.touchUp(screenX, screenY, pointer, button);
         if (ship.isDestroyed()) {
             resetButton.touchUp(touch, pointer, button);
+            quitButton.touchUp(touch, pointer, button);
         }
         return false;
     }
