@@ -13,6 +13,7 @@ public class Star extends Sprite {
     private static final float MAX_HEIGHT = 0.011f;
 
     private final Vector2 velocity;
+    private final Vector2 parallax;
     private Rect worldBounds;
 
     public Star(TextureRegion region) {
@@ -20,6 +21,7 @@ public class Star extends Sprite {
         float vx = Rnd.nextFloat(-0.005f, 0.005f);
         float vy = Rnd.nextFloat(-0.60f, -0.045f);
         velocity = new Vector2(vx, vy);
+        parallax = new Vector2();
     }
 
     @Override
@@ -31,9 +33,10 @@ public class Star extends Sprite {
         setHeightProportion(Rnd.nextFloat(MIN_HEIGHT, MAX_HEIGHT));
     }
 
-    @Override
-    public void update(float delta) {
-        pos.mulAdd(velocity, delta);
+    public void update(float delta, float velocityX, float velocityY) {
+        this.parallax.set(-velocityX*2, -velocityY*2);
+        parallax.add(velocity);
+        pos.mulAdd(parallax, delta);
         if (getRight() < worldBounds.getLeft()) setLeft(worldBounds.getRight());
         if (getLeft() > worldBounds.getRight()) setRight(worldBounds.getLeft());
         if (getTop() < worldBounds.getBottom()) setBottom(worldBounds.getTop());
