@@ -118,9 +118,9 @@ public abstract class Ship extends MovableSprite {
 
     public void heal(int value) {
         hp += value;
-        if (hp > MAX_HP) {
-            hp = MAX_HP;
-        }
+//        if (hp > MAX_HP) {
+//            hp = MAX_HP;
+//        }
     }
 
     @Override

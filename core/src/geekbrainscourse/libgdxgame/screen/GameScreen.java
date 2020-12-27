@@ -110,8 +110,8 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         }
         bulletPool.drawActiveObjects(batch);
-        enemyPool.drawActiveObjects(batch);
         healsPool.drawActiveObjects(batch);
+        enemyPool.drawActiveObjects(batch);
         if (ship.isDestroyed()) {
             resetButton.draw(batch);
             quitButton.draw(batch);
@@ -164,9 +164,9 @@ public class GameScreen extends BaseScreen {
                 b.destroy();
             }
             for (Ship s : enemyPool.getActiveObjects()) {
-                if (!s.isOutside(b) && b.getOwner() == ship) {
+                if (!s.isOutside(b) && b.getOwner() == ship && s.pos.dst(b.pos) <= s.getHalfHeight()) {
                     if (s.hit(b.getDamage())) {
-                        if (Rnd.nextFloat(0, 1) > 0.25f) {
+                        if (Rnd.nextFloat(0, 1) > 0.5f) {
                             Heal h = healsPool.obtain();
                             h.randomizeVelocity();
                             h.setPosition(s.pos.x, s.pos.y);
