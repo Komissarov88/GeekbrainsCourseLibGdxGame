@@ -54,22 +54,23 @@ public abstract class Ship extends MovableSprite {
         explodingAnimation = new AnimationHelper(12, 12);
     }
 
-    public void hit(int damage) {
+    public boolean hit(int damage) {
         if (damageTimer.isCool()) {
             setFrame(1);
             damageTimer.reset(damageCoolDown);
             hp -= damage;
             if (isExploding) {
-                return;
+                return false;
             }
             if (hp <= 0) {
                 explodingAnimation.start();
                 isExploding = true;
                 shipResources.playExplosion();
-                return;
+                return true;
             }
             shipResources.playHit();
         }
+        return false;
     }
 
     @Override

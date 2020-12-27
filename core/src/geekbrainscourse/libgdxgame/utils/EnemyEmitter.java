@@ -65,7 +65,7 @@ public class EnemyEmitter {
         this.enemyPool = enemyPool;
     }
 
-    public void generate(float delta) {
+    public void generate(float delta, int level) {
         generateTimer += delta;
         if (generateTimer >= GENERATE_INTERVAL) {
             generateTimer = 0f;
@@ -78,7 +78,7 @@ public class EnemyEmitter {
                         shipResources,
                         ENEMY_SMALL_BULLET_HEIGHT,
                         enemySmallBulletV,
-                        ENEMY_SMALL_BULLET_DAMAGE,
+                        ENEMY_SMALL_BULLET_DAMAGE * level,
                         ENEMY_SMALL_HP,
                         ENEMY_SMALL_RELOAD_INTERVAL,
                         enemySmallV,
@@ -91,7 +91,7 @@ public class EnemyEmitter {
                         shipResources,
                         ENEMY_MIDDLE_BULLET_HEIGHT,
                         enemyMiddleBulletV,
-                        ENEMY_MIDDLE_BULLET_DAMAGE,
+                        ENEMY_MIDDLE_BULLET_DAMAGE * level,
                         ENEMY_MIDDLE_HP,
                         ENEMY_MIDDLE_RELOAD_INTERVAL,
                         enemyMiddleV,
@@ -104,7 +104,7 @@ public class EnemyEmitter {
                         shipResources,
                         ENEMY_BIG_BULLET_HEIGHT,
                         enemyBigBulletV,
-                        ENEMY_BIG_BULLET_DAMAGE,
+                        ENEMY_BIG_BULLET_DAMAGE * level,
                         ENEMY_BIG_HP,
                         ENEMY_BIG_RELOAD_INTERVAL,
                         enemyBigV,

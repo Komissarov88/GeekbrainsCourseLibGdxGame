@@ -37,6 +37,8 @@ public class GameScreen extends BaseScreen {
     private Button resetButton;
     private Button quitButton;
 
+    private int frags;
+
     @Override
     public void show() {
         atlas = new TextureAtlas("main.atlas");
@@ -73,6 +75,8 @@ public class GameScreen extends BaseScreen {
                 Gdx.app.exit();
             }
         });
+
+        frags = 0;
     }
 
     @Override
@@ -112,7 +116,7 @@ public class GameScreen extends BaseScreen {
         enemyPool.updateActiveObjects(delta);
         checkCollision();
         if (!ship.isDestroyed()) {
-            enemyEmitter.generate(delta);
+            enemyEmitter.generate(delta, frags / 10 + 1);
         }
     }
 
@@ -125,6 +129,7 @@ public class GameScreen extends BaseScreen {
         }
         ship.setPosition(0, -0.5f);
         ship.flushDestroy();
+        frags = 0;
     }
 
     public void checkCollision() {
@@ -135,7 +140,10 @@ public class GameScreen extends BaseScreen {
             }
             for (Ship s : enemyPool.getActiveObjects()) {
                 if (!s.isOutside(b) && b.getOwner() == ship) {
-                    s.hit(b.getDamage());
+                    if (s.hit(b.getDamage())) {
+                        frags++;
+                        System.out.println(frags);
+                    }
                     b.destroy();
                 }
             }
