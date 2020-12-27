@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.utils.Align;
 
 import geekbrainscourse.libgdxgame.base.BaseScreen;
 import geekbrainscourse.libgdxgame.base.Button;
@@ -16,6 +17,7 @@ import geekbrainscourse.libgdxgame.sprite.Bullet;
 import geekbrainscourse.libgdxgame.sprite.PlayerShip;
 import geekbrainscourse.libgdxgame.sprite.Star;
 import geekbrainscourse.libgdxgame.utils.EnemyEmitter;
+import geekbrainscourse.libgdxgame.utils.Font;
 import geekbrainscourse.libgdxgame.utils.ShipResources;
 
 public class GameScreen extends BaseScreen {
@@ -38,6 +40,11 @@ public class GameScreen extends BaseScreen {
     private Button quitButton;
 
     private int frags;
+    private Font font;
+    private StringBuilder sbFrags;
+    private StringBuilder sbHp;
+    private StringBuilder sbLevel;
+
 
     @Override
     public void show() {
@@ -77,6 +84,11 @@ public class GameScreen extends BaseScreen {
         });
 
         frags = 0;
+        font = new Font("font.fnt", "font.png");
+        font.setSize(0.02f);
+        sbFrags = new StringBuilder();
+        sbHp = new StringBuilder();
+        sbLevel = new StringBuilder();
     }
 
     @Override
@@ -99,6 +111,7 @@ public class GameScreen extends BaseScreen {
         } else {
             ship.draw(batch);
         }
+        printInfo();
         batch.end();
     }
 
@@ -196,6 +209,18 @@ public class GameScreen extends BaseScreen {
         return super.keyDown(keycode);
     }
 
+    public void printInfo() {
+        final float MARGIN = 0.01f;
+        sbFrags.setLength(0);
+        font.draw(batch, sbFrags.append("FRAGS ").append(frags), worldBounds.getLeft() + MARGIN, worldBounds.getTop() - MARGIN);
+        sbHp.setLength(0);
+        if (ship.getHp() >= 0) {
+            font.draw(batch, sbHp.append("HP ").append(ship.getHp()), worldBounds.pos.x, worldBounds.getTop() - MARGIN, Align.center);
+        }
+        sbLevel.setLength(0);
+        font.draw(batch, sbLevel.append("LEVEL ").append(frags / 10 + 1), worldBounds.getRight() - MARGIN, worldBounds.getTop() - MARGIN, Align.right);
+    }
+
     @Override
     public void dispose() {
         atlas.dispose();
@@ -203,6 +228,7 @@ public class GameScreen extends BaseScreen {
         enemyPool.dispose();
         bgm.dispose();
         shipResources.dispose();
+        font.dispose();
         super.dispose();
     }
 }

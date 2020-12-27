@@ -111,6 +111,10 @@ public abstract class Ship extends MovableSprite {
         }
     }
 
+    public int getHp() {
+        return hp;
+    }
+
     @Override
     public void flushDestroy() {
         super.flushDestroy();
