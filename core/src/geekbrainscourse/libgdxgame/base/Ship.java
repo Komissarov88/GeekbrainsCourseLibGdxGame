@@ -21,6 +21,7 @@ public abstract class Ship extends MovableSprite {
     protected float bulletHeight;
     protected int damage;
     protected int hp;
+    protected final static int MAX_HP = 100;
 
     protected float damageCoolDown = 0.1f;
     protected CoolDownTimer damageTimer;
@@ -113,6 +114,13 @@ public abstract class Ship extends MovableSprite {
 
     public int getHp() {
         return hp;
+    }
+
+    public void heal(int value) {
+        hp += value;
+        if (hp > MAX_HP) {
+            hp = MAX_HP;
+        }
     }
 
     @Override

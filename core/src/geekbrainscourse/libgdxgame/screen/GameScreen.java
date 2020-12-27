@@ -10,10 +10,13 @@ import geekbrainscourse.libgdxgame.base.BaseScreen;
 import geekbrainscourse.libgdxgame.base.Button;
 import geekbrainscourse.libgdxgame.base.ButtonPressed;
 import geekbrainscourse.libgdxgame.base.Ship;
+import geekbrainscourse.libgdxgame.math.Rnd;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
 import geekbrainscourse.libgdxgame.pool.EnemyPool;
+import geekbrainscourse.libgdxgame.pool.HealsPool;
 import geekbrainscourse.libgdxgame.sprite.BackgroundSprite;
 import geekbrainscourse.libgdxgame.sprite.Bullet;
+import geekbrainscourse.libgdxgame.sprite.Heal;
 import geekbrainscourse.libgdxgame.sprite.PlayerShip;
 import geekbrainscourse.libgdxgame.sprite.Star;
 import geekbrainscourse.libgdxgame.utils.EnemyEmitter;
@@ -32,6 +35,7 @@ public class GameScreen extends BaseScreen {
     private BulletPool bulletPool;
     private EnemyPool enemyPool;
     private EnemyEmitter enemyEmitter;
+    private HealsPool healsPool;
 
     private Music bgm;
     private ShipResources shipResources;
@@ -55,6 +59,8 @@ public class GameScreen extends BaseScreen {
         shipResources = new ShipResources(0.5f, atlas);
         ship = new PlayerShip(0, -0.5f, atlas, bulletPool, shipResources);
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, shipResources, enemyPool);
+
+        healsPool = new HealsPool(worldBounds, atlas);
 
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -105,6 +111,7 @@ public class GameScreen extends BaseScreen {
         }
         bulletPool.drawActiveObjects(batch);
         enemyPool.drawActiveObjects(batch);
+        healsPool.drawActiveObjects(batch);
         if (ship.isDestroyed()) {
             resetButton.draw(batch);
             quitButton.draw(batch);
@@ -118,6 +125,7 @@ public class GameScreen extends BaseScreen {
     public void freeDestroyedObjects() {
         bulletPool.freeAllDestroyedActiveObjects();
         enemyPool.freeAllDestroyedActiveObjects();
+        healsPool.freeAllDestroyedActiveObjects();
     }
 
     public void updateObjects(float delta) {
@@ -127,6 +135,7 @@ public class GameScreen extends BaseScreen {
         }
         bulletPool.updateActiveObjects(delta);
         enemyPool.updateActiveObjects(delta);
+        healsPool.updateActiveObjects(delta);
         checkCollision();
         if (!ship.isDestroyed()) {
             enemyEmitter.generate(delta, frags / 10 + 1);
@@ -140,6 +149,9 @@ public class GameScreen extends BaseScreen {
         for (Bullet b : bulletPool.getActiveObjects()) {
             b.destroy();
         }
+        for (Heal h : healsPool.getActiveObjects()) {
+             h.destroy();
+        }
         ship.setPosition(0, -0.5f);
         ship.flushDestroy();
         frags = 0;
@@ -147,18 +159,29 @@ public class GameScreen extends BaseScreen {
 
     public void checkCollision() {
         for (Bullet b : bulletPool.getActiveObjects()) {
-            if (!ship.isOutside(b) && b.getOwner() != ship) {
+            if (!ship.isOutside(b) && b.getOwner() != ship && ship.pos.dst(b.pos) <= ship.getHalfHeight()) {
                 ship.hit(b.getDamage());
                 b.destroy();
             }
             for (Ship s : enemyPool.getActiveObjects()) {
                 if (!s.isOutside(b) && b.getOwner() == ship) {
                     if (s.hit(b.getDamage())) {
+                        if (Rnd.nextFloat(0, 1) > 0.25f) {
+                            Heal h = healsPool.obtain();
+                            h.randomizeVelocity();
+                            h.setPosition(s.pos.x, s.pos.y);
+                        }
                         frags++;
-                        System.out.println(frags);
                     }
                     b.destroy();
                 }
+            }
+        }
+        for (Heal h : healsPool.getActiveObjects()) {
+            if (!ship.isOutside(h)  && ship.pos.dst(h.pos) <= ship.getHalfHeight()) {
+                ship.heal(frags / 10 + 1);
+                h.destroy();
+                shipResources.playHeal();
             }
         }
     }
@@ -226,6 +249,7 @@ public class GameScreen extends BaseScreen {
         atlas.dispose();
         bulletPool.dispose();
         enemyPool.dispose();
+        healsPool.dispose();
         bgm.dispose();
         shipResources.dispose();
         font.dispose();

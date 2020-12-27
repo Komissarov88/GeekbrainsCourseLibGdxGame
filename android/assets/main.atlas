@@ -46,6 +46,13 @@ bullet
   orig: 32, 32
   offset: 0, 0
   index: -1
+heal
+  rotate: false
+  xy: 2, 2
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
 spEnemySpaceship
   rotate: false
   xy: 2, 244
@@ -55,7 +62,7 @@ spEnemySpaceship
   index: -1
 star
   rotate: false
-  xy: 2, 2
+  xy: 448, 112
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

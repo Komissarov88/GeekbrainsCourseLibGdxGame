@@ -7,7 +7,7 @@ import geekbrainscourse.libgdxgame.SpaceScroller;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setWindowedMode(1280, 720);
+		config.setWindowedMode(500, 720);
 		config.useOpenGL3(true, 3, 3);
 		new Lwjgl3Application(new SpaceScroller(), config);
 	}
