@@ -21,6 +21,7 @@ public abstract class Ship extends MovableSprite {
     protected float bulletHeight;
     protected int damage;
     protected int hp;
+    protected final static int MAX_HP = 100;
 
     protected float damageCoolDown = 0.1f;
     protected CoolDownTimer damageTimer;
@@ -54,22 +55,23 @@ public abstract class Ship extends MovableSprite {
         explodingAnimation = new AnimationHelper(12, 12);
     }
 
-    public void hit(int damage) {
+    public boolean hit(int damage) {
         if (damageTimer.isCool()) {
             setFrame(1);
             damageTimer.reset(damageCoolDown);
             hp -= damage;
             if (isExploding) {
-                return;
+                return false;
             }
             if (hp <= 0) {
                 explodingAnimation.start();
                 isExploding = true;
                 shipResources.playExplosion();
-                return;
+                return true;
             }
             shipResources.playHit();
         }
+        return false;
     }
 
     @Override
@@ -108,6 +110,17 @@ public abstract class Ship extends MovableSprite {
             shipResources.setHeightProportion(getHeight() * 1.5f);
             shipResources.drawExplosion(pos, explodingAnimation.getCurrentFrame(), batch);
         }
+    }
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void heal(int value) {
+        hp += value;
+//        if (hp > MAX_HP) {
+//            hp = MAX_HP;
+//        }
     }
 
     @Override

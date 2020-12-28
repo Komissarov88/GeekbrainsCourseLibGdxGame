@@ -4,18 +4,23 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.utils.Align;
 
 import geekbrainscourse.libgdxgame.base.BaseScreen;
 import geekbrainscourse.libgdxgame.base.Button;
 import geekbrainscourse.libgdxgame.base.ButtonPressed;
 import geekbrainscourse.libgdxgame.base.Ship;
+import geekbrainscourse.libgdxgame.math.Rnd;
 import geekbrainscourse.libgdxgame.pool.BulletPool;
 import geekbrainscourse.libgdxgame.pool.EnemyPool;
+import geekbrainscourse.libgdxgame.pool.HealsPool;
 import geekbrainscourse.libgdxgame.sprite.BackgroundSprite;
 import geekbrainscourse.libgdxgame.sprite.Bullet;
+import geekbrainscourse.libgdxgame.sprite.Heal;
 import geekbrainscourse.libgdxgame.sprite.PlayerShip;
 import geekbrainscourse.libgdxgame.sprite.Star;
 import geekbrainscourse.libgdxgame.utils.EnemyEmitter;
+import geekbrainscourse.libgdxgame.utils.Font;
 import geekbrainscourse.libgdxgame.utils.ShipResources;
 
 public class GameScreen extends BaseScreen {
@@ -30,12 +35,20 @@ public class GameScreen extends BaseScreen {
     private BulletPool bulletPool;
     private EnemyPool enemyPool;
     private EnemyEmitter enemyEmitter;
+    private HealsPool healsPool;
 
     private Music bgm;
     private ShipResources shipResources;
 
     private Button resetButton;
     private Button quitButton;
+
+    private int frags;
+    private Font font;
+    private StringBuilder sbFrags;
+    private StringBuilder sbHp;
+    private StringBuilder sbLevel;
+
 
     @Override
     public void show() {
@@ -46,6 +59,8 @@ public class GameScreen extends BaseScreen {
         shipResources = new ShipResources(0.5f, atlas);
         ship = new PlayerShip(0, -0.5f, atlas, bulletPool, shipResources);
         enemyEmitter = new EnemyEmitter(atlas, worldBounds, shipResources, enemyPool);
+
+        healsPool = new HealsPool(worldBounds, atlas);
 
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < STAR_COUNT; i++) {
@@ -73,6 +88,13 @@ public class GameScreen extends BaseScreen {
                 Gdx.app.exit();
             }
         });
+
+        frags = 0;
+        font = new Font("font.fnt", "font.png");
+        font.setSize(0.02f);
+        sbFrags = new StringBuilder();
+        sbHp = new StringBuilder();
+        sbLevel = new StringBuilder();
     }
 
     @Override
@@ -88,6 +110,7 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         }
         bulletPool.drawActiveObjects(batch);
+        healsPool.drawActiveObjects(batch);
         enemyPool.drawActiveObjects(batch);
         if (ship.isDestroyed()) {
             resetButton.draw(batch);
@@ -95,24 +118,27 @@ public class GameScreen extends BaseScreen {
         } else {
             ship.draw(batch);
         }
+        printInfo();
         batch.end();
     }
 
     public void freeDestroyedObjects() {
         bulletPool.freeAllDestroyedActiveObjects();
         enemyPool.freeAllDestroyedActiveObjects();
+        healsPool.freeAllDestroyedActiveObjects();
     }
 
     public void updateObjects(float delta) {
+        ship.update(delta);
         for (Star star : stars) {
-            star.update(delta);
+            star.update(delta, ship.getVelocityX(), ship.getVelocityY());
         }
         bulletPool.updateActiveObjects(delta);
         enemyPool.updateActiveObjects(delta);
-        ship.update(delta);
+        healsPool.updateActiveObjects(delta);
         checkCollision();
         if (!ship.isDestroyed()) {
-            enemyEmitter.generate(delta);
+            enemyEmitter.generate(delta, frags / 10 + 1);
         }
     }
 
@@ -123,21 +149,39 @@ public class GameScreen extends BaseScreen {
         for (Bullet b : bulletPool.getActiveObjects()) {
             b.destroy();
         }
+        for (Heal h : healsPool.getActiveObjects()) {
+             h.destroy();
+        }
         ship.setPosition(0, -0.5f);
         ship.flushDestroy();
+        frags = 0;
     }
 
     public void checkCollision() {
         for (Bullet b : bulletPool.getActiveObjects()) {
-            if (!ship.isOutside(b) && b.getOwner() != ship) {
+            if (!ship.isOutside(b) && b.getOwner() != ship && ship.pos.dst(b.pos) <= ship.getHalfHeight()) {
                 ship.hit(b.getDamage());
                 b.destroy();
             }
             for (Ship s : enemyPool.getActiveObjects()) {
-                if (!s.isOutside(b) && b.getOwner() == ship) {
-                    s.hit(b.getDamage());
+                if (!s.isOutside(b) && b.getOwner() == ship && s.pos.dst(b.pos) <= s.getHalfHeight()) {
+                    if (s.hit(b.getDamage())) {
+                        if (Rnd.nextFloat(0, 1) > 0.5f) {
+                            Heal h = healsPool.obtain();
+                            h.randomizeVelocity();
+                            h.setPosition(s.pos.x, s.pos.y);
+                        }
+                        frags++;
+                    }
                     b.destroy();
                 }
+            }
+        }
+        for (Heal h : healsPool.getActiveObjects()) {
+            if (!ship.isOutside(h)  && ship.pos.dst(h.pos) <= ship.getHalfHeight()) {
+                ship.heal(frags / 10 + 1);
+                h.destroy();
+                shipResources.playHeal();
             }
         }
     }
@@ -188,13 +232,27 @@ public class GameScreen extends BaseScreen {
         return super.keyDown(keycode);
     }
 
+    public void printInfo() {
+        final float MARGIN = 0.01f;
+        sbFrags.setLength(0);
+        font.draw(batch, sbFrags.append("FRAGS ").append(frags), worldBounds.getLeft() + MARGIN, worldBounds.getTop() - MARGIN);
+        sbHp.setLength(0);
+        if (ship.getHp() >= 0) {
+            font.draw(batch, sbHp.append("HP ").append(ship.getHp()), worldBounds.pos.x, worldBounds.getTop() - MARGIN, Align.center);
+        }
+        sbLevel.setLength(0);
+        font.draw(batch, sbLevel.append("LEVEL ").append(frags / 10 + 1), worldBounds.getRight() - MARGIN, worldBounds.getTop() - MARGIN, Align.right);
+    }
+
     @Override
     public void dispose() {
         atlas.dispose();
         bulletPool.dispose();
         enemyPool.dispose();
+        healsPool.dispose();
         bgm.dispose();
         shipResources.dispose();
+        font.dispose();
         super.dispose();
     }
 }

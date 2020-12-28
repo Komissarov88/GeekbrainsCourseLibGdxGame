@@ -24,6 +24,14 @@ public class IncrementMove {
         destination.add(x, y);
     }
 
+    public float getVelocityX() {
+        return destination.x - current.x;
+    }
+
+    public float getVelocityY() {
+        return destination.y - current.y;
+    }
+
     public void setCurrent(float x, float y) {
         current.set(x, y);
     }
